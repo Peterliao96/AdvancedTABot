@@ -12,7 +12,7 @@ import { SearchBar } from 'react-native-elements'
 //import nodejs from 'nodejs-mobile-react-native';
 import {createStackNavigator,createMaterialTopTabNavigator} from 'react-navigation';
 import AuthScreen from './containers/AuthScreen'
-import SettingsScreen from './containers/SettingsScreen';
+import SettingsNavigator from './containers/SettingsScreen/SettingsNavigator';
 import RequestScreenNavigator from './containers/RequestScreen';
 import HomeScreenNavigator from './containers/HomeScreen';
 import DiscoverScreen from './containers/DiscoverScreen/DiscoverScreen';
@@ -115,8 +115,7 @@ class AppNavigator extends Component {
             renderIcon={() => <Icon name="cog" size={px2dp(22)} color="#666"/>}
             renderSelectedIcon={() => <Icon name="cog" size={px2dp(22)} color="#3496f0"/>}
             onPress={() => this.setState({selectedTab: 'setting'})}>
-            <SettingsScreen
-              logout={() => this.setState({ isLoggedIn: false, isAppReady: false })}
+            <SettingsNavigator
             />
           </TabNavigator.Item>
         </TabNavigator>
@@ -162,8 +161,7 @@ class AppNavigator extends Component {
             renderIcon={() => <Icon name="cog" size={px2dp(22)} color="#666"/>}
             renderSelectedIcon={() => <Icon name="cog" size={px2dp(22)} color="#3496f0"/>}
             onPress={() => this.setState({selectedTab: 'setting'})}>
-            <SettingsScreen
-              logout={() => this.setState({ isLoggedIn: false, isAppReady: false })}
+            <SettingsNavigator
             />
           </TabNavigator.Item>
         </TabNavigator>

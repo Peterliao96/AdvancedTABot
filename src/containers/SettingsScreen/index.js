@@ -57,6 +57,7 @@ class SettingsScreen extends Component{
 
 
 
+
   render() {
     const data = [{
       id: 1,
@@ -92,6 +93,7 @@ class SettingsScreen extends Component{
             <ListItem
               title={item.title}
               leftIcon={{name: item.icon}}
+              onPress={() => this.props.navigation.push('MoreScreen',{id:item.id})}
               containerStyle={{ borderBottomWidth: 0 }}
             />
             </TouchableOpacity>
