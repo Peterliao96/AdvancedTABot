@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
+const APPID = require('../../config/FB_APPID_config')
 import { StyleSheet } from 'react-native'
 import { Text, View } from 'react-native-animatable'
-import { signIn } from '../../actions/auth';
+import { signIn,LoginWithFB } from '../../actions/auth';
 import { validateEmail, isEmpty } from '../../helpers/validation';
 import CustomButton from '../../components/CustomButton'
+import {Permissions, Notifications} from 'expo';
 import CustomTextInput from '../../components/CustomTextInput'
 import metrics from '../../config/metrics'
 import type { Error, User } from '../../types/types';
-
 type Props = {
   ValidationProps: ValidationProps,
   onSignIn: ({ email: string, password: string }) => User,
@@ -91,6 +92,16 @@ class LoginForm extends Component<void,Props,State> {
     }
   }
 
+  async loginWithFacebook() {
+
+    //ENTER YOUR APP ID
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(APPID, { permissions: ['public_profile','email','user_friends','user_gender','groups_access_member_info'] })
+
+    if (type == 'success') {
+      this.props.onLoginWithFB(token)
+    }
+  }
+
   _signIn = () => {
     const signInData = {
       email: this.state.email,
@@ -108,7 +119,7 @@ class LoginForm extends Component<void,Props,State> {
 
   render () {
     const { auth: {isLoading ,signInError, signInErrorMessage, isLoggedIn} } = this.props
-    const { onSignupLinkPress, onSignIn } = this.props
+    const { onSignupLinkPress, onSignIn,onResetPWPress,onLoginWithFB } = this.props
     const isValid = this.state.email !== '' && this.state.password !== ''
     return (
       <View style={styles.container}>
@@ -149,6 +160,16 @@ class LoginForm extends Component<void,Props,State> {
               text={'Log In'}
             />
           </View>
+          <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={600}>
+            <CustomButton
+              onPress={this.loginWithFacebook.bind(this)}
+              isLoading={isLoading}
+              buttonStyle={styles.signInFacebookButton}
+              textStyle={styles.signInFacebookButtonText}
+              text={'Log In with Facebook'}
+            />
+          </View>
+          <View style={{flexDirection:'row'}}>
           <Text
             ref={(ref) => this.linkRef = ref}
             style={styles.signupLink}
@@ -159,6 +180,17 @@ class LoginForm extends Component<void,Props,State> {
           >
             {'Not registered yet?'}
           </Text>
+          <Text
+            ref={(ref) => this.linkRef = ref}
+            style={styles.forgetPasswordLink}
+            onPress={onResetPWPress}
+            animation={'fadeIn'}
+            duration={600}
+            delay={400}
+          >
+            {'Forget password?'}
+          </Text>
+          </View>
         </View>
       </View>
     )
@@ -174,6 +206,7 @@ export default connect(
     onClearError: () => {
       dispatch({ type: 'CLEAR_ERROR' });
     },
+    onLoginWithFB: data => {dispatch(LoginWithFB(data))}
   }),
 )(LoginForm);
 
@@ -182,22 +215,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: metrics.DEVICE_WIDTH * 0.1
   },
   form: {
-    marginTop: 20
+    marginTop: 20,
+    marginBottom:10
   },
   footer: {
-    height: 100,
+    height: 150,
     justifyContent: 'center'
   },
   loginButton: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    marginVertical:10
+  },
+  signInFacebookButton: {
+    backgroundColor: '#3B5998',
+    marginVertical:10
   },
   loginButtonText: {
     color: '#3E464D',
     fontWeight: 'bold'
   },
+  signInFacebookButtonText: {
+    color: 'white'
+  },
   signupLink: {
     color: 'rgba(255,255,255,0.6)',
-    alignSelf: 'center',
+    marginLeft:0,
+    padding: 20
+  },
+  forgetPasswordLink:{
+    color: 'rgba(255,255,255,0.6)',
+    marginRight:0,
     padding: 20
   }
 })
