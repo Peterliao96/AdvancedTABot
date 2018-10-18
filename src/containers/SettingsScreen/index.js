@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity
 } from 'react-native';
-import MyHeader from '../../components/MyHeader';
+import PersonHeader from '../../components/PersonHeader';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
 import {getMyProfile} from '../../actions/loadMyProfile';
@@ -75,12 +75,12 @@ class SettingsScreen extends Component{
       title: 'Help',
       icon: 'help'
     }]
-    const {auth: {userFBData}} = this.props
+    const {auth: {userFBData,FBuser}} = this.props
     const { user: {profile}} = this.props
     const { onLogoutPress,logout ,getProfile} = this.props
     return (
       <View style={{flex:1}}>
-        <MyHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? userFBData.user.photoURL : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg'}/>
+        <PersonHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg'}/>
         <List
       containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}
     >

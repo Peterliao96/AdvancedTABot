@@ -9,7 +9,6 @@ import {
   Image,
   Dimensions
 } from 'react-native';
-const width = Dimensions('window').width;
 
 export default class Header extends Component{
 
@@ -29,7 +28,7 @@ export default class Header extends Component{
     return (
       <Image style={styles.headerBackground} source={require('../images/drawerImage.png')}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => this.setState(modalVisible:true)}
+          <TouchableOpacity onPress={() => this.setState(modalVisible:true)}>
             <View style={styles.profilepicWrap}>
               <Image style={style.profiepic} source={avatar} />
             </View>

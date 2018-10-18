@@ -3,6 +3,7 @@ const router = express.Router()
 const User = require('../models/user');
 
 router.post('/',(req,res,next) => {
+  console.log(req.body)
   BotId = req.body.BotId;
   UserId = req.body.UserId;
   User.findOne({UserId: UserId})

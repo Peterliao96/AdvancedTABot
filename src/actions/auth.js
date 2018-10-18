@@ -16,7 +16,8 @@ import {
   SIMULATE_SIGN_IN,
   LOGIN_WITHFB,
   LOGIN_WITHFB_FAILURE,
-  LOGIN_WITHFB_SUCCESS
+  LOGIN_WITHFB_SUCCESS,
+  LOGIN_WITHFB_DATA
 } from '../reducers/auth';
 
 function signUpSuccess (userData) {
@@ -56,7 +57,14 @@ function loginWithFBFailure(err){
     })
   }
 }
-
+function loginWithFBdata(FBuser){
+  return dispatch => {
+    dispatch({
+      type:LOGIN_WITHFB_DATA,
+      FBuser
+    })
+  }
+}
 function loginWithFBSuccess(userFBData){
   return dispatch => {
     dispatch({
@@ -88,6 +96,7 @@ export function LoginWithFB(token){
         })
         .then(response => response.json())
         .then(res => {
+          dispatch(loginWithFBdata(res.FBuser))
           console.log(res.message)
         })
         .catch(err => {

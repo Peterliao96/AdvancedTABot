@@ -12,19 +12,21 @@ router.post('/',(req,res,next) => {
       const FBUser = new User({
         fullName: fullName,
         email:email,
-        avatar:avatar,
+        avatar:avatar + "?width=9999",
         UserId: UserId
       })
       FBUser.save().then(result => {
         res.send({
-          message:'You have logined with Facebook Successfully!'
+          message:'You have logined with Facebook Successfully!',
+          FBuser:result
         })
         return;
       })
       return;
     }
     res.send({
-      message: 'Welcome back'
+      message: 'Welcome back',
+      FBuser:result
     })
   })
 });
