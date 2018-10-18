@@ -76,6 +76,7 @@ export function deleteBot(data){
       .then(response => response.json())
       .then(res => {
         dispatch(loadBotSuccess(res.BotsArr))
+        dispatch(NavigationActions.navigate({routeName:'FriendGroupScreen'}))
       })
       .catch(err => {
         console.log(err);

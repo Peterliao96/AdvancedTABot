@@ -42,7 +42,7 @@ class BotsProfileScreen extends Component{
   async _deleteBot(UserId){
     if(!this.isEmpty(this.props.auth.userFBData)){
       const data = {
-        friendId: UserId,
+        BotId: UserId,
         UserId: this.props.auth.userFBData.user.providerData[0].uid
       }
       this.props.removeBot(data)
@@ -52,7 +52,7 @@ class BotsProfileScreen extends Component{
         if(UserInfo){
           var UserInfo = JSON.parse(UserInfo)
           const data = {
-            friendId: UserId,
+            BotId: UserId,
             UserId: UserInfo.user.myId
           }
           this.props.removeBot(data)

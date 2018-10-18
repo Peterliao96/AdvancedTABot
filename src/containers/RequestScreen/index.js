@@ -99,9 +99,9 @@ class RequestScreenNavigator extends Component{
         onChangeText={(text) => this._searchUser(text)}
         platform="ios"
         cancelButtonTitle="Cancel"
-        containerStyle={{backgroundColor:COLOR.blue500,width:deviceW, marginTop:0,borderWidth:1,borderColor:COLOR.blue500}}
-        inputContainerStyle={{backgroundColor:COLOR.blue100}}
-        inputStyle={{backgroundColor:COLOR.blue100}}
+        containerStyle={{backgroundColor:COLOR.blue500,width:deviceW, marginTop:0,height:80,borderWidth:1,borderColor:COLOR.blue500}}
+        inputContainerStyle={{backgroundColor:COLOR.blue100,marginTop:40}}
+        inputStyle={{backgroundColor:COLOR.blue100,marginTop:40}}
         placeholder='Search by full name' />
       <SwitchTabs/>
       </Container>

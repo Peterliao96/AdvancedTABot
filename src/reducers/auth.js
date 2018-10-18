@@ -8,14 +8,14 @@ export const SIMULATE_SIGN_IN = 'SIMULATE_SIGN_IN';
 export const LOGIN_WITHFB = 'LOGIN_WITHFB';
 export const LOGIN_WITHFB_FAILURE = 'LOGIN_WITHFB_FAILURE';
 export const LOGIN_WITHFB_SUCCESS = 'LOGIN_WITHFB_SUCCESS';
-
+export const LOGIN_WITHFB_DATA = 'LOGIN_WITHFB_DATA';
 const initState = {
   error: '',
   isLoading: false,
   isLoggedIn: false,
   userData:{},
   userFBData:{},
-
+  FBuser:{},
   signInError: false,
   signUpError: false,
 
@@ -41,6 +41,13 @@ export default(state = initState, action) => {
         ...state,
         isLoading:false,
         userFBData:action.userFBData,
+        isLoggedIn:true
+      }
+    case LOGIN_WITHFB_DATA:
+      return {
+        ...state,
+        isLoading:false,
+        FBuser:action.FBuser,
         isLoggedIn:true
       }
     case SIMULATE_SIGN_IN:

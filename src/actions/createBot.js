@@ -66,7 +66,6 @@ export function createBot(BotData){
       if(res){
         Alert.alert(res.message)
         dispatch(submitBotSuccess(BotData))
-        dispatch(NavigationActions.navigate({routeName:'FriendGroupScreen'}))
         const data = {
           UserId: BotData.UserId
         }
