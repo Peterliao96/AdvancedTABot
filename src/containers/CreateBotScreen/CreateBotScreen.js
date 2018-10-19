@@ -63,6 +63,13 @@ class CreateBotScreen extends Component<void, Props, State>{
         }
         this.props.onSubmitbot(BotData)
         this.props.navigation.navigate('FriendGroupScreen')
+      } else if (!this.isEmpty(this.props.auth.FBuser)) {
+        const BotData = {
+          fullName:this.state.fullName,
+          description: this.state.description,
+          avatar: this.props.images.BotAvatar,
+          UserId: this.props.auth.FBuser.UserId
+        }
       } else {
         var UserInfo = await AsyncStorage.getItem('UserInfo');
         UserInfo = JSON.parse(UserInfo);
@@ -82,7 +89,7 @@ class CreateBotScreen extends Component<void, Props, State>{
 
   render() {
 
-    const {auth:{userFBData}} = this.props
+    const {auth:{userFBData,FBuser}} = this.props
     const {bot:{isLoading}} = this.props
     const {images:{BotAvatar}} = this.props
     const { onSubmitbot } = this.props

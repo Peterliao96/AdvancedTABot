@@ -46,6 +46,12 @@ class friendProfileScreen extends Component{
         UserId: this.props.auth.userFBData.user.providerData[0].uid
       }
       this.props.removefriend(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        friendId: UserId,
+        UserId: this.props.auth.FBuser.UserId
+      }
+      this.props.removefriend(data)
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         if(UserInfo){

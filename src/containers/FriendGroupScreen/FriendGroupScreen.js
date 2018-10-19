@@ -38,6 +38,12 @@ class FriendGroupScreen extends Component{
       }
       this.props.listBots(data)
       this.props.listFriends(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId
+      }
+      this.props.listBots(data)
+      this.props.listFriends(data)
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         var UserInfo = JSON.parse(UserInfo);
@@ -52,7 +58,7 @@ class FriendGroupScreen extends Component{
 
 
   render() {
-    const {auth:{userFBData}} = this.props
+    const {auth:{userFBData,FBuser}} = this.props
     const {bot: {isGetBotLoading, BotsArr,isGettingFriendList, friendList}} = this.props
     const {listBots, listFriends} = this.props;
     return (

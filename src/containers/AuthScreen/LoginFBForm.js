@@ -3,7 +3,7 @@ var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
 const APPID = require('../../config/FB_APPID_config')
 import { LoginWithFB,LoginWithPrevFB } from '../../actions/auth';
-import { StyleSheet, Alert,Image,TouchableOpacity } from 'react-native'
+import { StyleSheet, Alert,ImageBackground,TouchableOpacity ,ActivityIndicator} from 'react-native'
 import { Text, View } from 'react-native-animatable'
 import CustomButton from '../../components/CustomButton'
 import metrics from '../../config/metrics'
@@ -51,7 +51,7 @@ class LoginFBForm extends Component{
 
 
   render(){
-    const {auth:{isLoggedIn,isAppReady}} = this.props
+    const {auth:{isLoggedIn,isAppReady,isLoading,isPrevFBLoading}} = this.props
     const { onSignupLinkPress, onSignIn,onResetPWPress,onLoginWithFB,goToLogin,loginWithFB } = this.props
 
     return(
@@ -59,10 +59,14 @@ class LoginFBForm extends Component{
       <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={400}>
       <View style={{flexDirection:'row',alignSelf:'center'}}>
         {firebase.auth().currentUser ? <TouchableOpacity onPress={this.loginWithPrevFacebook.bind(this)}>
-          <Image style={styles.avatar}  source={{uri:firebase.auth().currentUser ? firebase.auth().currentUser.photoURL+'?width=9999' :''}} />
+          <ImageBackground style={styles.avatar}  source={{uri:firebase.auth().currentUser ? firebase.auth().currentUser.photoURL+'?width=9999' :''}} >
+            <ActivityIndicator size="large" color="#0000ff" animating={isPrevFBLoading}/>
+          </ImageBackground>
         </TouchableOpacity> : <View></View>}
         <TouchableOpacity onPress={this.loginWithFacebook.bind(this)}>
-          <Image style={styles.avatar} source={require('../../images/FBavatar.jpg')} />
+          <ImageBackground style={styles.avatar} source={require('../../images/FBavatar.jpg')} >
+            <ActivityIndicator size="large" color="#0000ff" animating={isLoading}/>
+          </ImageBackground>
         </TouchableOpacity>
       </View>
       </View>

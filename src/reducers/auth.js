@@ -6,6 +6,8 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const SIMULATE_SIGN_IN = 'SIMULATE_SIGN_IN';
 export const LOGIN_WITHFB = 'LOGIN_WITHFB';
+export const LOGIN_WITH_PREV_FB = 'LOGIN_WITH_PREV_FB';
+export const LOGIN_WITH_PREV_FB_SUCCESS = 'LOGIN_WITH_PREV_FB_SUCCESS';
 export const LOGIN_WITHFB_FAILURE = 'LOGIN_WITHFB_FAILURE';
 export const LOGIN_WITHFB_SUCCESS = 'LOGIN_WITHFB_SUCCESS';
 export const LOGIN_WITHFB_DATA = 'LOGIN_WITHFB_DATA';
@@ -17,6 +19,7 @@ const initState = {
   error: '',
   isAppReady: false, // Has the app completed the login animation?
   isLoading: false,
+  isPrevFBLoading:false,
   isLoggedIn: false,
   userData:{},
   userFBData:{},
@@ -51,6 +54,19 @@ export default(state = initState, action) => {
       return {
         ...state,
         isLoading:true
+      }
+    case LOGIN_WITH_PREV_FB:
+      return {
+        ...state,
+        isPrevFBLoading:true
+      }
+    case LOGIN_WITH_PREV_FB_SUCCESS:
+      return {
+        ...state,
+        isPrevFBLoading:false,
+        FBuser:action.FBuser,
+        isLoggedIn:true,
+        isAppReady:true
       }
     case LOGIN_WITHFB_FAILURE:
       return {

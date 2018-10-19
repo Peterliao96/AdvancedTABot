@@ -15,6 +15,8 @@ import {
   SIGN_UP,
   SIMULATE_SIGN_IN,
   LOGIN_WITHFB,
+  LOGIN_WITH_PREV_FB,
+  LOGIN_WITH_PREV_FB_SUCCESS,
   LOGIN_WITHFB_FAILURE,
   LOGIN_WITHFB_SUCCESS,
   LOGIN_WITHFB_DATA,
@@ -83,6 +85,20 @@ function SignInWithFB(){
   }
 }
 
+function loginWithPrevFBSuccess(FBuser){
+  return dispatch => {
+    dispatch({
+      type:LOGIN_WITH_PREV_FB_SUCCESS,
+      FBuser
+    })
+  }
+}
+function SignInWithPrevFB(){
+  return {
+    type:LOGIN_WITH_PREV_FB
+  }
+}
+
 function loginWithFBFailure(err){
   return dispatch => {
     dispatch({
@@ -109,7 +125,7 @@ function loginWithFBSuccess(userFBData){
 }
 export function LoginWithPrevFB(data){
   return dispatch => {
-    dispatch(SignInWithFB());
+    dispatch(SignInWithPrevFB());
     callApi('/loginWithFB',{
       method: 'POST',
       headers: {
@@ -119,7 +135,7 @@ export function LoginWithPrevFB(data){
     })
     .then(response => response.json())
     .then(res => {
-      setTimeout(() => dispatch(loginWithFBdata(res.FBuser)), 1000)
+      setTimeout(() => dispatch(loginWithPrevFBSuccess(res.FBuser)), 1000)
       console.log(res.message)
     })
     .catch(err => {

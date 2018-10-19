@@ -47,6 +47,13 @@ class UserProfileScreen extends Component{
       }
       this.props.onAddFriend(data)
       this.props.navigation.navigate('AddFriendScreen')
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        FriendId: UserId,
+        UserId: this.props.auth.FBuser.UserId
+      }
+      this.props.onAddFriend(data)
+      this.props.navigation.navigate('AddFriendScreen')
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         if(UserInfo){

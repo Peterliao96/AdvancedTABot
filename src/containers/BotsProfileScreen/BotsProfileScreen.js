@@ -47,6 +47,13 @@ class BotsProfileScreen extends Component{
       }
       this.props.removeBot(data)
       this.props.navigation.goBack()
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        BotId: UserId,
+        UserId: this.props.auth.FBuser.UserId
+      }
+      this.props.removeBot(data)
+      this.props.navigation.goBack()
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         if(UserInfo){
