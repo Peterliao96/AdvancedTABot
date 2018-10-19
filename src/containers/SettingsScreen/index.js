@@ -7,6 +7,8 @@ import {
   FlatList,
   TouchableOpacity
 } from 'react-native';
+import { Constants, MapView, Location, Permissions } from 'expo';
+import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle,Avatar } from 'react-native-material-ui';
 import PersonHeader from '../../components/PersonHeader';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
@@ -18,6 +20,16 @@ class SettingsScreen extends Component{
 
   constructor(props){
     super(props)
+  }
+
+  static navigationOptions = {
+    headerTitle:'My profile',
+    headerStyle:{
+      backgroundColor:COLOR.blue500
+    },
+    headerTitleStyle:{
+      color:'#FFF'
+    },
   }
 
 
@@ -33,6 +45,7 @@ class SettingsScreen extends Component{
       })
     }
   }
+
 
   isEmpty(obj){
     for(var key in obj) {
@@ -67,6 +80,29 @@ class SettingsScreen extends Component{
     }
   }
 
+  async SwitchPages(id){
+    if(id === '1'){
+      this.props.navigation.push('MoreScreen',{id:id})
+    } else if (id === '2'){
+      this.props.navigation.push('MoreScreen',{id:id})
+    } else if( id === '3'){
+      this.props.navigation.push('MoreScreen',{id:id})
+    } else if (id === '4'){
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== 'granted') {
+        this.setState({
+          locationResult: 'Permission to access location was denied',
+          location,
+        });
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      this.props.navigation.push('locationScreen',{id:id,location:location})
+    } else if (id === '5'){
+      this.props.navigation.push('MoreScreen',{id:id})
+    }
+  }
+
 
 
 
@@ -85,6 +121,10 @@ class SettingsScreen extends Component{
       icon: 'image'
     },{
       id:"4",
+      title: 'My current location',
+      icon: 'map'
+    },{
+      id:"5",
       title: 'Help',
       icon: 'help'
     }]
@@ -105,7 +145,7 @@ class SettingsScreen extends Component{
             <ListItem
               title={item.title}
               leftIcon={{name: item.icon}}
-              onPress={() => this.props.navigation.push('MoreScreen',{id:item.id})}
+              onPress={this.SwitchPages.bind(this,item.id)}
               containerStyle={{ borderBottomWidth: 0 }}
             />
             </TouchableOpacity>

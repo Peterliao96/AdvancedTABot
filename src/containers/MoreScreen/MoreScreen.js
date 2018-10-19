@@ -13,7 +13,7 @@ export default class MoreScreen extends Component{
   }
 
   static navigationOptions = {
-    headerTitle:'Group Chat Setup',
+    headerTitle:'help',
     headerStyle:{
       backgroundColor:COLOR.blue500
     },
@@ -27,22 +27,9 @@ export default class MoreScreen extends Component{
     const {navigation} = this.props
     const id = navigation.getParam('id')
 
-    if(id === 1){
+    if(id === "1"){
       return (
         <View>
-          <Text> Hello </Text>
-          <CustomButton
-            text={'Logout'}
-            onPress={this.props.logout}
-            buttonStyle={styles.button}
-            textStyle={styles.buttonText}
-          />
-        </View>
-      )
-    } else if (id === 2){
-      return (
-        <View>
-          <Text> Hello </Text>
           <CustomButton
             text={'Logout'}
             onPress={this.props.logout}

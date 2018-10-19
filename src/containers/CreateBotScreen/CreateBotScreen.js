@@ -62,7 +62,7 @@ class CreateBotScreen extends Component<void, Props, State>{
           UserId: this.props.auth.userFBData.user.providerData[0].uid
         }
         this.props.onSubmitbot(BotData)
-        this.props.navigation.navigate('FriendGroupScreen')
+        this.props.navigation.navigate('AddFriendScreen')
       } else if (!this.isEmpty(this.props.auth.FBuser)) {
         const BotData = {
           fullName:this.state.fullName,
@@ -70,6 +70,8 @@ class CreateBotScreen extends Component<void, Props, State>{
           avatar: this.props.images.BotAvatar,
           UserId: this.props.auth.FBuser.UserId
         }
+        this.props.onSubmitbot(BotData)
+        this.props.navigation.navigate('AddFriendScreen')
       } else {
         var UserInfo = await AsyncStorage.getItem('UserInfo');
         UserInfo = JSON.parse(UserInfo);
@@ -80,7 +82,7 @@ class CreateBotScreen extends Component<void, Props, State>{
             UserId: UserInfo.user.myId
         }
         this.props.onSubmitbot(BotData)
-        this.props.navigation.navigate('FriendGroupScreen')
+        this.props.navigation.navigate('AddFriendScreen')
       }
     } catch(err){
       console.log(err)

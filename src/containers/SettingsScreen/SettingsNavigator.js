@@ -6,14 +6,14 @@ import {
 } from 'react-native';
 import SettingsScreen from './index'
 import MoreScreen from '../MoreScreen/MoreScreen';
+import locationScreen from '../locationScreen/locationScreen'
 import {createStackNavigator,createMaterialTopTabNavigator} from 'react-navigation';
 import {connect} from 'react-redux';
 
 const SettingsSwitchPages = createStackNavigator({
   SettingsScreen:{screen:SettingsScreen},
-  MoreScreen:{screen:MoreScreen}
-},{
-  headerMode: 'none'
+  MoreScreen:{screen:MoreScreen},
+  locationScreen: {screen:locationScreen}
 })
 
 class SettingsNavigator extends Component{

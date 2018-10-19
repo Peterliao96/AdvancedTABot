@@ -6,7 +6,7 @@ import {
   LOAD_BOT_FAILURE,
   LOAD_BOT_SUCCESS
 } from '../reducers/bot';
-
+import {Alert} from 'react-native'
 import callApi from '../helpers/api';
 
 
@@ -72,7 +72,7 @@ export function editBot(data){
     .then(res => {
       if(res){
         Alert.alert(res.message)
-        const data = {
+        const loaddata = {
           UserId: data.UserId
         }
         callApi('/loadBots',{
@@ -80,7 +80,7 @@ export function editBot(data){
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(loaddata),
         })
         .then(response => response.json())
         .then(res => {
