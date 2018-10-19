@@ -7,6 +7,7 @@ import {
 import SettingsScreen from './index'
 import MoreScreen from '../MoreScreen/MoreScreen';
 import {createStackNavigator,createMaterialTopTabNavigator} from 'react-navigation';
+import {connect} from 'react-redux';
 
 const SettingsSwitchPages = createStackNavigator({
   SettingsScreen:{screen:SettingsScreen},
@@ -14,11 +15,20 @@ const SettingsSwitchPages = createStackNavigator({
 },{
   headerMode: 'none'
 })
-export default class SettingsNavigator extends Component{
+
+class SettingsNavigator extends Component{
 
   render() {
+
+    const {auth:{isLoggedIn,isAppReady}} = this.props
     return (
       <SettingsSwitchPages/>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps,null)(SettingsNavigator)

@@ -9,7 +9,7 @@ import metrics from '../../config/metrics'
 import Opening from './Opening'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
-
+import LoginFBForm from './LoginFBForm'
 const IMAGE_WIDTH = metrics.DEVICE_WIDTH * 0.8
 
 if (Platform.OS === 'android') UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -102,6 +102,7 @@ class AuthScreen extends Component {
           <Opening
             onCreateAccountPress={() => this._setVisibleForm('SIGNUP')}
             onSignInPress={() => this._setVisibleForm('LOGIN')}
+            onSignInFBPress={() => this._setVisibleForm('LOGIN_FB')}
           />
         )}
         <KeyboardAvoidingView
@@ -121,6 +122,16 @@ class AuthScreen extends Component {
             <LoginForm
               ref={(ref) => this.formRef = ref}
               onSignupLinkPress={() => this._setVisibleForm('SIGNUP')}
+              onSignIn={login}
+              goTologinWithFacebook={() => this._setVisibleForm('LOGIN_FB')}
+              isLoading={isLoading}
+            />
+          )}
+          {(visibleForm === 'LOGIN_FB') && (
+            <LoginFBForm
+              ref={(ref) => this.formRef = ref}
+              onSignupLinkPress={() => this._setVisibleForm('SIGNUP')}
+              goToLogin={() => this._setVisibleForm('LOGIN')}
               onSignIn={login}
               isLoading={isLoading}
             />

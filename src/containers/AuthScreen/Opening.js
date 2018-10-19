@@ -17,6 +17,7 @@ class Opening extends Component {
   static propTypes = {
     onCreateAccountPress: PropTypes.func.isRequired,
     onSignInPress: PropTypes.func.isRequired,
+    onSignInFBPress:PropTypes.func.isRequired
   }
 
   async loginWithFacebook() {
@@ -62,7 +63,7 @@ class Opening extends Component {
         <View animation={'zoomIn'} delay={1000} duration={400} style={{marginTop:30}}>
           <CustomButton
             text={'Sign In with Facebook'}
-            onPress={this.loginWithFacebook.bind(this)}
+            onPress={this.props.onSignInFBPress}
             buttonStyle={styles.signInFacebookButton}
             textStyle={styles.signInFacebookButtonText}
             isLoading={isLoading}

@@ -17,9 +17,43 @@ import {
   LOGIN_WITHFB,
   LOGIN_WITHFB_FAILURE,
   LOGIN_WITHFB_SUCCESS,
-  LOGIN_WITHFB_DATA
+  LOGIN_WITHFB_DATA,
+  LOGOUT,
+  LOGOUT_FAILURE,
+  LOGOUT_SUCCESS
 } from '../reducers/auth';
+function signOut(){
+  return {
+    type:LOGOUT
+  }
+}
 
+function logoutSuccess(){
+  return dispatch => {
+    dispatch({
+      type:LOGOUT_SUCCESS
+    })
+  }
+}
+function logoutFailure(err){
+  return dispatch => {
+    dispatch({
+      type:LOGOUT_FAILURE,
+      err
+    })
+  }
+}
+
+export function onLogout(){
+  return dispatch => {
+    dispatch(signOut())
+    firebase.auth().signOut().then(function() {
+      dispatch(logoutSuccess())
+    }).catch(function(error) {
+      console.log(error)
+    });
+  }
+}
 function signUpSuccess (userData) {
   return dispatch => {
     dispatch({
@@ -73,7 +107,26 @@ function loginWithFBSuccess(userFBData){
     })
   }
 }
-
+export function LoginWithPrevFB(data){
+  return dispatch => {
+    dispatch(SignInWithFB());
+    callApi('/loginWithFB',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(res => {
+      setTimeout(() => dispatch(loginWithFBdata(res.FBuser)), 1000)
+      console.log(res.message)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+}
 export function LoginWithFB(token){
   return dispatch => {
     const credential = firebase.auth.FacebookAuthProvider.credential(token)

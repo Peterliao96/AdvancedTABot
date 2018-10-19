@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
-const APPID = require('../../config/FB_APPID_config')
 import { StyleSheet } from 'react-native'
 import { Text, View } from 'react-native-animatable'
-import { signIn,LoginWithFB } from '../../actions/auth';
+import { signIn } from '../../actions/auth';
 import { validateEmail, isEmpty } from '../../helpers/validation';
 import CustomButton from '../../components/CustomButton'
 import {Permissions, Notifications} from 'expo';
@@ -37,7 +36,8 @@ class LoginForm extends Component<void,Props,State> {
     isLoading: PropTypes.bool.isRequired,
     // isLoggedIn: PropTypes.bool.isRequired,
     // onLoginPress: PropTypes.func.isRequired,
-    onSignupLinkPress: PropTypes.func.isRequired
+    onSignupLinkPress: PropTypes.func.isRequired,
+    goTologinWithFacebook: PropTypes.func.isRequired
   }
 
   state = {
@@ -119,7 +119,7 @@ class LoginForm extends Component<void,Props,State> {
 
   render () {
     const { auth: {isLoading ,signInError, signInErrorMessage, isLoggedIn} } = this.props
-    const { onSignupLinkPress, onSignIn,onResetPWPress,onLoginWithFB } = this.props
+    const { onSignupLinkPress, onSignIn,onResetPWPress,onLoginWithFB,goTologinWithFacebook } = this.props
     const isValid = this.state.email !== '' && this.state.password !== ''
     return (
       <View style={styles.container}>
@@ -162,7 +162,7 @@ class LoginForm extends Component<void,Props,State> {
           </View>
           <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={600}>
             <CustomButton
-              onPress={this.loginWithFacebook.bind(this)}
+              onPress={this.props.goTologinWithFacebook}
               isLoading={isLoading}
               buttonStyle={styles.signInFacebookButton}
               textStyle={styles.signInFacebookButtonText}
@@ -205,8 +205,7 @@ export default connect(
     },
     onClearError: () => {
       dispatch({ type: 'CLEAR_ERROR' });
-    },
-    onLoginWithFB: data => {dispatch(LoginWithFB(data))}
+    }
   }),
 )(LoginForm);
 

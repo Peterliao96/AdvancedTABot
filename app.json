@@ -10,9 +10,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/chat_bot-01.jpg",
+      "image": "./assets/chat.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor":"#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

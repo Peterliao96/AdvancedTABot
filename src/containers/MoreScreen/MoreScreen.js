@@ -23,17 +23,35 @@ export default class MoreScreen extends Component{
   }
 
   render() {
-    return (
-      <View>
-        <Text> Hello </Text>
-        <CustomButton
-          text={'Logout'}
-          onPress={this.props.logout}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-      </View>
-    )
+
+    const {navigation} = this.props
+    const id = navigation.getParam('id')
+
+    if(id === 1){
+      return (
+        <View>
+          <Text> Hello </Text>
+          <CustomButton
+            text={'Logout'}
+            onPress={this.props.logout}
+            buttonStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+        </View>
+      )
+    } else if (id === 2){
+      return (
+        <View>
+          <Text> Hello </Text>
+          <CustomButton
+            text={'Logout'}
+            onPress={this.props.logout}
+            buttonStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+        </View>
+      )
+    }
   }
 }
 

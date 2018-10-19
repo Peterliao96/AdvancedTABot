@@ -10,21 +10,28 @@ import {
 import PersonHeader from '../../components/PersonHeader';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux';
+import {onLogout}from '../../actions/auth';
 import {getMyProfile} from '../../actions/loadMyProfile';
 import {List, ListItem} from 'react-native-elements';
 import CustomButton from '../../components/CustomButton'
 class SettingsScreen extends Component{
 
-  static propTypes = {
-    logout: PropTypes.func
+  constructor(props){
+    super(props)
   }
 
 
   async _onLogout(){
-    AsyncStorage.removeItem('UserInfo').then(() => {
-      console.log('Token is removed')
-      this.props.logout()
-    })
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      this.props.onLogoutPress()
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      this.props.onLogoutPress()
+    } else {
+      AsyncStorage.removeItem('UserInfo').then(() => {
+        console.log('Token is removed')
+        this.props.logout()
+      })
+    }
   }
 
   isEmpty(obj){
@@ -40,6 +47,11 @@ class SettingsScreen extends Component{
     if(!this.isEmpty(this.props.auth.userFBData)){
       const data = {
         UserId: this.props.auth.userFBData.user.providerData[0].uid
+      }
+      this.props.getProfile(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId
       }
       this.props.getProfile(data)
     } else {
@@ -60,28 +72,28 @@ class SettingsScreen extends Component{
 
   render() {
     const data = [{
-      id: 1,
+      id: "1",
       title: 'Setting',
       icon: 'settings'
     },{
-      id:2,
+      id:"2",
       title: 'Edit my profile',
       icon: 'edit'
     },{
-      id:3,
+      id:"3",
       title: 'My posting',
       icon: 'image'
     },{
-      id:4,
+      id:"4",
       title: 'Help',
       icon: 'help'
     }]
-    const {auth: {userFBData,FBuser}} = this.props
+    const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
     const { user: {profile}} = this.props
     const { onLogoutPress,logout ,getProfile} = this.props
     return (
       <View style={{flex:1}}>
-        <PersonHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg'}/>
+        <PersonHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar}/>
         <List
       containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}
     >
@@ -104,9 +116,10 @@ class SettingsScreen extends Component{
     </List>
         <CustomButton
           text={'Logout'}
-          onPress={logout}
+          onPress={this._onLogout.bind(this)}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
+          isLoading={isLoading}
         />
       </View>
     )
@@ -119,7 +132,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getProfile: data => dispatch(getMyProfile(data))
+  getProfile: data => {dispatch(getMyProfile(data))},
+  onLogoutPress: () => {dispatch(onLogout())}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(SettingsScreen)

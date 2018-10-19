@@ -34,8 +34,7 @@ class AppNavigator extends Component {
   state = {
     selectedTab: 'home',
     isLoggedIn: false, // Is the user authenticated?
-    isLoading: false, // Is the user loggingIn/signinUp?
-    isAppReady: false // Has the app completed the login animation?
+    isLoading: false // Is the user loggingIn/signinUp?
   }
 
   /**
@@ -69,58 +68,17 @@ class AppNavigator extends Component {
     return false
   }
 
+  changeAppReady(){
+    this.props.auth.isAppReady = true
+  }
+
 
 
 
   render() {
-    const { auth: {isLoggedIn, isLoading} } = this.props
+    const { auth: {isLoggedIn, isLoading,isAppReady} } = this.props
     const { onSimulateLogin } = this.props
-    if(this.isTokenExisted && this.state.isAppReady){
-      return (
-        <TabNavigator>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'home'}
-            title="Chat"
-            selectedTitleStyle={{color: "#3496f0"}}
-            renderIcon={() => <Icon name="comment" size={px2dp(22)} color="#666"/>}
-            renderSelectedIcon={() => <Icon name="comment" size={px2dp(22)} color="#3496f0"/>}
-            badgeText="1"
-            onPress={() => this.setState({selectedTab: 'home'})}>
-              <HomeScreenNavigator />
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'request'}
-            title="Request"
-            selectedTitleStyle={{color: "#3496f0"}}
-            renderIcon={() => <Icon name="users" size={px2dp(22)} color="#666"/>}
-            renderSelectedIcon={() => <Icon name="users" size={px2dp(22)} color="#3496f0"/>}
-            onPress={() => this.setState({selectedTab: 'request'})}>
-            <RequestScreenNavigator/>
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'discover'}
-            title="Discover"
-            selectedTitleStyle={{color: "#3496f0"}}
-            renderIcon={() => <Icon name="compass" size={px2dp(22)} color="#666"/>}
-            renderSelectedIcon={() => <Icon name="compass" size={px2dp(22)} color="#3496f0"/>}
-            onPress={() => this.setState({selectedTab: 'discover'})}>
-            <DiscoverScreen
-
-            />
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'setting'}
-            title="Settings"
-            selectedTitleStyle={{color: "#3496f0"}}
-            renderIcon={() => <Icon name="cog" size={px2dp(22)} color="#666"/>}
-            renderSelectedIcon={() => <Icon name="cog" size={px2dp(22)} color="#3496f0"/>}
-            onPress={() => this.setState({selectedTab: 'setting'})}>
-            <SettingsNavigator
-            />
-          </TabNavigator.Item>
-        </TabNavigator>
-      )
-    } else if (this.state.isAppReady) {
+     if (isAppReady) {
       console.log('Hi!')
       return (
         <TabNavigator>
@@ -161,7 +119,7 @@ class AppNavigator extends Component {
             renderIcon={() => <Icon name="cog" size={px2dp(22)} color="#666"/>}
             renderSelectedIcon={() => <Icon name="cog" size={px2dp(22)} color="#3496f0"/>}
             onPress={() => this.setState({selectedTab: 'setting'})}>
-            <SettingsNavigator
+            <SettingsNavigator isLoggedIn={isLoggedIn} isAppReady={isAppReady}
             />
           </TabNavigator.Item>
         </TabNavigator>
@@ -173,7 +131,7 @@ class AppNavigator extends Component {
           signup={this._simulateSignup}
           isLoggedIn={isLoggedIn}
           isLoading={isLoading}
-          onLoginAnimationCompleted={() => this.setState({ isAppReady: true })}
+          onLoginAnimationCompleted={this.changeAppReady}
         />
       )
     }
