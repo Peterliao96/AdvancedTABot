@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   cancelButton: {
     backgroundColor: '#1976D2',
     marginHorizontal: 20,
-    marginTop:0
+    marginBottom:20
   },
   buttonText: {
     color: 'white',

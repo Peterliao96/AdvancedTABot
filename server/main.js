@@ -32,6 +32,7 @@ const loginRouter = require('./routes/login');
 const loadSearchUserRouter = require('./routes/loadSearchUser');
 const loadFriendsRouter = require('./routes/loadFriends');
 const deleteFriendRouter = require('./routes/deleteFriend');
+const editBotRouter = require('./routes/editBot');
 app.use(morgan('dev'));
 /*app.use(jwt({
   secret: 'asfasfasdf',
@@ -61,6 +62,7 @@ app.use('/loadFriends',loadFriendsRouter);
 app.use('/loginWithFB',loginWithFBRouter);
 app.use('/uploadAvatar',uploadAvatarRouter);
 app.use('/deleteFriend',deleteFriendRouter);
+app.use('/editBot',editBotRouter);
 //app.use('/loadFriends',loadFriendRouter);
 
 

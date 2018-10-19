@@ -10,6 +10,7 @@ import FriendGroupScreen from '../FriendGroupScreen/FriendGroupScreen';
 import FriendProfileScreen from '../friendProfileScreen/friendProfileScreen';
 import CreateBotScreen from '../CreateBotScreen/CreateBotScreen';
 import RequestScreen from './RequestScreen';
+import editBotScreen from '../editBotScreen/editBotScreen';
 import UserProfileScreen from '../UserProfileScreen/UserProfileScreen';
 import BotsProfileScreen from '../BotsProfileScreen/BotsProfileScreen';
 import {connect} from 'react-redux';
@@ -48,6 +49,9 @@ const SwitchTabs = createMaterialTopTabNavigator({
       },
       BotsProfileScreen:{
         screen: BotsProfileScreen
+      },
+      editBotScreen:{
+        screen: editBotScreen
       },
       friendProfileScreen:{
         screen: FriendProfileScreen

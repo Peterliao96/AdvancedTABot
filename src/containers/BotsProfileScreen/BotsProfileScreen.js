@@ -72,15 +72,15 @@ class BotsProfileScreen extends Component{
 
   render() {
     const data = [{
-      id:1,
+      id:"1",
       title: 'Bot setting',
       icon:'settings'
     },{
-      id:2,
+      id:"2",
       title:'Edit this bot',
       icon: 'edit'
     },{
-      id:3,
+      id:"3",
       title: 'Help',
       icon: 'help'
     }]
@@ -107,6 +107,7 @@ class BotsProfileScreen extends Component{
               leftIcon={{name:item.icon}}
               title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
+              onPress={() => this.props.navigation.push('editBotScreen',{id:item.id,UserId:UserId,avatar:avatar,description:description,fullName:fullName})}
             />
             </TouchableOpacity>
           )

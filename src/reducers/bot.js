@@ -7,6 +7,9 @@ export const LOAD_BOT_FAILURE = 'LOAD_BOT_FAILURE';
 export const DELETE_FRIEND = 'DELETE_FRIEND';
 export const DELETE_FRIEND_FAILURE = 'DELETE_FRIEND_FAILURE';
 export const DELETE_FRIEND_SUCCESS = 'DELETE_FRIEND_SUCCESS';
+export const EDIT_BOT = 'EDIT_BOT';
+export const EDIT_BOT_SUCCESS = 'EDIT_BOT_SUCCESS';
+export const EDIT_BOT_FAILURE = 'EDIT_BOT_FAILURE';
 export const DELETE_BOT = 'DELETE_BOT';
 export const DELETE_BOT_FAILURE = 'DELETE_BOT_FAILURE';
 export const DELETE_BOT_SUCCESS = 'DELETE_BOT_SUCCESS';
@@ -18,6 +21,7 @@ const initState = {
   isLoading: false,
   isDeleting: false,
   isGetBotLoading:false,
+  isEditing:false,
   isGettingFriendList:false,
   friendData: {
     fullName:'',
@@ -37,6 +41,22 @@ const initState = {
 
 export default(state = initState, action) => {
   switch (action.type) {
+    case EDIT_BOT:
+      return {
+        ...state,
+        isEditing:true
+      }
+    case EDIT_BOT_FAILURE:
+      return {
+        ...state,
+        isEditing:false
+      }
+    case EDIT_BOT_SUCCESS:
+      return {
+        ...state,
+        isEditing:false,
+        BotData:action.BotData
+      }
     case DELETE_FRIEND:
       return{
         ...state,
