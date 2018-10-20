@@ -20,7 +20,7 @@ const deviceW = Dimensions.get('window').width
 import TabNavigator from 'react-native-tab-navigator';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {connect} from 'react-redux';
-import { simulateLoginProcess } from './actions/auth';
+import { simulateLoginProcess,simulateSignInSuccess } from './actions/auth';
 const basePx = 375
 
 function px2dp(px) {
@@ -32,9 +32,7 @@ function px2dp(px) {
 class AppNavigator extends Component {
 
   state = {
-    selectedTab: 'home',
-    isLoggedIn: false, // Is the user authenticated?
-    isLoading: false // Is the user loggingIn/signinUp?
+    selectedTab: 'home'
   }
 
   /**
@@ -44,7 +42,7 @@ class AppNavigator extends Component {
   _simulateLogin = (data) => {
     this.props.onSimulateLogin(data)
     //this.setState({ isLoading: true })
-    //setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
+    setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
   }
 
   _simulateSignup = (username, password, fullName) => {
@@ -68,8 +66,8 @@ class AppNavigator extends Component {
     return false
   }
 
-  changeAppReady(){
-    this.props.auth.isAppReady = true
+  _simulateLogin(){
+    this.props.onSimulateLoginFinished()
   }
 
 
@@ -77,8 +75,8 @@ class AppNavigator extends Component {
 
   render() {
     const { auth: {isLoggedIn, isLoading,isAppReady} } = this.props
-    const { onSimulateLogin } = this.props
-     if (isAppReady) {
+    const { onSimulateLogin,onSimulateLoginFinished } = this.props
+     if (isAppReady && isLoggedIn) {
       console.log('Hi!')
       return (
         <TabNavigator>
@@ -131,7 +129,6 @@ class AppNavigator extends Component {
           signup={this._simulateSignup}
           isLoggedIn={isLoggedIn}
           isLoading={isLoading}
-          onLoginAnimationCompleted={this.changeAppReady}
         />
       )
     }
@@ -143,7 +140,8 @@ mapStateToProps = (state) => ({
 })
 
 mapDispatchToProps = (dispatch) => ({
-  onSimulateLogin: data => dispatch(simulateLoginProcess(data))
+  onSimulateLogin: data => {dispatch(simulateLoginProcess(data))},
+  onSimulateLoginFinished: () => {dispatch(simulateSignInSuccess())}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(AppNavigator)

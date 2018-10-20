@@ -5,6 +5,7 @@ export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const SIMULATE_SIGN_IN = 'SIMULATE_SIGN_IN';
+export const SIMULATE_SIGN_IN_SUCCESS = 'SIMULATE_SIGN_IN_SUCCESS';
 export const LOGIN_WITHFB = 'LOGIN_WITHFB';
 export const LOGIN_WITH_PREV_FB = 'LOGIN_WITH_PREV_FB';
 export const LOGIN_WITH_PREV_FB_SUCCESS = 'LOGIN_WITH_PREV_FB_SUCCESS';
@@ -14,7 +15,7 @@ export const LOGIN_WITHFB_DATA = 'LOGIN_WITHFB_DATA';
 export const LOGOUT = 'LOGOUT';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
-
+export const CHANGE_APPREADY = 'CHANGE_APPREADY';
 const initState = {
   error: '',
   isAppReady: false, // Has the app completed the login animation?
@@ -33,6 +34,13 @@ const initState = {
 
 export default(state = initState, action) => {
   switch (action.type) {
+    case SIMULATE_SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        isLoading:false,
+        isAppReady:true,
+        isLoggedIn:true
+      }
     case LOGOUT:
       return {
         ...state,

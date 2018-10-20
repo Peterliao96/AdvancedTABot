@@ -7,6 +7,7 @@ const firebase = require('firebase');
 firebase.initializeApp(config);
 import callApi from '../helpers/api';
 import {
+  SIMULATE_SIGN_IN_SUCCESS,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
   SIGN_UP_SUCCESS,
@@ -27,6 +28,13 @@ import {
 function signOut(){
   return {
     type:LOGOUT
+  }
+}
+function simulateSignInSuccess(){
+  return dispatch => {
+    dispatch({
+      type:SIMULATE_SIGN_IN_SUCCESS
+    })
   }
 }
 
@@ -239,11 +247,18 @@ function signInFailure(error){
     })
   }
 };
-export function simulateLoginProcess(){
+
+function simulateLogin(){
   return dispatch => {
     dispatch({
-      type: SIMULATE_SIGN_IN
+      type:SIMULATE_SIGN_IN
     })
+  }
+}
+export function simulateLoginProcess(){
+  return dispatch => {
+    dispatch(simulateLogin())
+    setTimeout(() => dispatch(simulateSignInSuccess()), 1000)
   }
 }
 
@@ -263,7 +278,8 @@ export function signIn(data) {
         if (response.token) {
           try {
             AsyncStorage.setItem('UserInfo', JSON.stringify(response)).then(() => {
-              setTimeout(() => dispatch(signInSuccess(response.user)), 1000)
+              dispatch(simulateLoginProcess())
+              setTimeout(() => dispatch(signInSuccess(response.user)), 1200)
             });
           } catch (err) {
             console.log(err);

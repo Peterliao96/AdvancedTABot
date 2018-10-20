@@ -118,7 +118,7 @@ class LoginForm extends Component<void,Props,State> {
 
 
   render () {
-    const { auth: {isLoading ,signInError, signInErrorMessage, isLoggedIn} } = this.props
+    const { auth: {isLoading ,signInError, signInErrorMessage, isLoggedIn,isAppReady} } = this.props
     const { onSignupLinkPress, onSignIn,onResetPWPress,onLoginWithFB,goTologinWithFacebook } = this.props
     const isValid = this.state.email !== '' && this.state.password !== ''
     return (
@@ -163,7 +163,6 @@ class LoginForm extends Component<void,Props,State> {
           <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={600}>
             <CustomButton
               onPress={this.props.goTologinWithFacebook}
-              isLoading={isLoading}
               buttonStyle={styles.signInFacebookButton}
               textStyle={styles.signInFacebookButtonText}
               text={'Log In with Facebook'}

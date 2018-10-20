@@ -5,7 +5,7 @@ import { Image, View } from 'react-native-animatable'
 import {connect} from 'react-redux';
 import imgLogo from '../../images/robot-dev.png'
 import metrics from '../../config/metrics'
-
+import {simulateLoginProcess} from '../../actions/auth';
 import Opening from './Opening'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
@@ -83,8 +83,8 @@ class AuthScreen extends Component {
   }
 
   render () {
-    const { auth: {isLoggedIn, isLoading} } = this.props
-    const { login } = this.props
+    const { auth: {isLoggedIn, isLoading,isAppReady} } = this.props
+    const { login,onLoginAnimationCompleted } = this.props
     const { visibleForm } = this.state
     // The following style is responsible of the "bounce-up from bottom" animation of the form
     const formStyle = (!visibleForm) ? { height: 0 } : { marginTop: 40 }
@@ -98,7 +98,7 @@ class AuthScreen extends Component {
           style={styles.logoImg}
           source={imgLogo}
         />
-        {(!visibleForm && !isLoggedIn) && (
+        {(!visibleForm && !isLoggedIn && !isAppReady) && (
           <Opening
             onCreateAccountPress={() => this._setVisibleForm('SIGNUP')}
             onSignInPress={() => this._setVisibleForm('LOGIN')}
@@ -123,6 +123,7 @@ class AuthScreen extends Component {
               ref={(ref) => this.formRef = ref}
               onSignupLinkPress={() => this._setVisibleForm('SIGNUP')}
               onSignIn={login}
+              isAppReady={isAppReady}
               goTologinWithFacebook={() => this._setVisibleForm('LOGIN_FB')}
               isLoading={isLoading}
             />
@@ -149,6 +150,9 @@ export default connect(mapStateToProps,
   dispatch => ({
     onSignIn:data => {
       dispatch(signIn(data))
+    },
+    onLoginAnimationCompleted:() => {
+      dispatch(simulateLoginProcess())
     }
   })
 )(AuthScreen)

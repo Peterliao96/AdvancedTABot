@@ -107,6 +107,7 @@ class SignupForm extends Component<void, Props, State> {
       email: this.state.email,
       password: this.state.password
     }
+    console.log('what')
     if (this._validateData()) {
       this.props.onSignup(signUpData);
     }

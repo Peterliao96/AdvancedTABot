@@ -41,7 +41,7 @@ class SettingsScreen extends Component{
     } else {
       AsyncStorage.removeItem('UserInfo').then(() => {
         console.log('Token is removed')
-        this.props.logout()
+        this.props.onLogoutPress()
       })
     }
   }

@@ -50,6 +50,11 @@ class RequestScreen extends Component{
         UserId: this.props.auth.userFBData.user.providerData[0].uid
       }
       this.props.displayRequestedList(data);
+    } else if (!this.isEmpty(this.props.auth.FBuser)) {
+      const data = {
+        UserId: this.props.auth.FBuser.UserId
+      }
+      this.props.displayRequestedList(data);
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         var UserInfo = JSON.parse(UserInfo);
@@ -66,6 +71,12 @@ class RequestScreen extends Component{
       if(!this.isEmpty(this.props.auth.userFBData)){
         const data = {
           UserId: this.props.auth.userFBData.user.providerData[0].uid,
+          RequestUserId: RequestUserId
+        }
+        this.props.OnApproveRequest(data)
+      } else if (!this.isEmpty(this.props.auth.FBuser)){
+        const data = {
+          UserId: this.props.auth.FBuser.UserId,
           RequestUserId: RequestUserId
         }
         this.props.OnApproveRequest(data)
@@ -87,6 +98,12 @@ class RequestScreen extends Component{
       if(!this.isEmpty(this.props.auth.userFBData)){
         const data = {
           UserId: this.props.auth.userFBData.user.providerData[0].uid,
+          RequestUserId: RequestUserId
+        }
+        this.props.ignore(data)
+      } else if (!this.isEmpty(this.props.auth.FBuser)){
+        const data = {
+          UserId: this.props.auth.FBuser.UserId,
           RequestUserId: RequestUserId
         }
         this.props.ignore(data)

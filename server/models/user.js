@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Bot = require('./bot');
 const Requested = require('./requested')
+const Conversation = require('./conversation');
 const userSchema = new mongoose.Schema({
   UserId: String,
   fullName: {
@@ -33,10 +34,10 @@ const userSchema = new mongoose.Schema({
     type: Array,
     ref: Bot
   },
-  conversations: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation',
-  }],
+  conversations: {
+    type:Array,
+    ref:Conversation
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);
