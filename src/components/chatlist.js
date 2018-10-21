@@ -29,10 +29,10 @@ const ChatList = (props) => {
         </Text>
         <Text style={{
           backgroundColor: 'transparent',
-          fontSize: 17,
+          fontSize: 12,
           color: '#000',
-          marginLeft:100,
-          marginTop:7
+          marginLeft:140,
+          marginTop:10
         }}>
           {moment(props.lastTime).from(Date.now())}
           </Text>

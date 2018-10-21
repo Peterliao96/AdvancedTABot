@@ -8,13 +8,13 @@ router.post('/',(req,res,next) => {
   UserId = req.body.UserId;
   description = req.body.description;
   avatar = req.body.avatar;
-  console.log(UserId)
+  BotId = UUID.v1();
   User.updateOne({
     UserId:UserId
   },{
     '$push':{
       bots:[{
-        UserId:UUID.v1(),
+        UserId:BotId,
         fullName:fullName,
         description: description,
         avatar:avatar
@@ -23,7 +23,8 @@ router.post('/',(req,res,next) => {
   })
   .then(result => {
     res.send({
-      message:fullName + ' is created succesfully!'
+      message:fullName + ' is created succesfully!',
+      BotId:BotId
     })
   })
   .catch(err => {

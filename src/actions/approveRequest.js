@@ -8,6 +8,7 @@ import {
   GET_FRIENDLIST_FAILURE,
   GET_FRIENDLIST_SUCCESS
 } from '../reducers/bot';
+
 import callApi from '../helpers/api';
 
 function gettingFriendList(){

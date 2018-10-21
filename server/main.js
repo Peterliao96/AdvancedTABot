@@ -26,8 +26,8 @@ const loginWithFBRouter = require('./routes/loginWithFB');
 const uploadAvatarRouter = require('./routes/uploadAvatar');
 const createConversationsRouter = require('./routes/createConversations');
 const createMessageRouter = require('./routes/createMessage');
-/*const loadConversationsRouter = require('./routes/loadConversations');
-const loadMessagesRouter = require('./routes/loadMessages');*/
+const loadConversationsRouter = require('./routes/loadConversations');
+//const loadMessagesRouter = require('./routes/loadMessages');*/
 const loginRouter = require('./routes/login');
 const loadSearchUserRouter = require('./routes/loadSearchUser');
 const loadFriendsRouter = require('./routes/loadFriends');
@@ -65,6 +65,7 @@ app.use('/deleteFriend',deleteFriendRouter);
 app.use('/editBot',editBotRouter);
 app.use('/createConversation',createConversationsRouter);
 app.use('/createMessage',createMessageRouter);
+app.use('/loadConversations',loadConversationsRouter);
 //app.use('/loadFriends',loadFriendRouter);
 
 

@@ -1,13 +1,54 @@
 import callApi from '../helpers/api';
+import {
+  LOAD_CONVERSATIONS,
+  LOAD_CONVERSATIONS_FAILURE,
+  LOAD_CONVERSATIONS_SUCCESS
+} from '../reducers/conversations'
 
-export const loadConversationsSuccess = conversations => ({
-  type: 'LOAD_CONVERSATIONS_SUCCESS',
-  conversations,
-});
+function loadingConversation(){
+  return {
+    type:LOAD_CONVERSATIONS
+  }
+}
 
-export const loadConversationsFailure = () => ({
-  type: 'LOAD_CONVERSATIONS_FAILURE',
-});
+function loadConversationSuccess(conversations){
+  return dispatch => {
+    dispatch({
+      type:LOAD_CONVERSATIONS_SUCCESS,
+      conversations
+    })
+  }
+}
+
+function loadConversationFailure(err) {
+  return dispatch => {
+    dispatch({
+      type:LOAD_CONVERSATIONS_FAILURE,
+      err
+    })
+  }
+}
+
+export function loadConversation(data) {
+  return dispatch => {
+    dispatch(loadingConversation())
+    callApi('/loadConversations',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(res => {
+      dispatch(loadConversationSuccess(res.chatList))
+    })
+    .catch(err => {
+      dispatch(loadConversationFailure(err))
+    })
+  }
+}
+
 
 export const loadConversations = () => dispatch => {
   callApi('/conversations', {
