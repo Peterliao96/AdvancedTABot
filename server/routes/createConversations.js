@@ -24,11 +24,11 @@ router.post('/myFirstBotConversation',(req,res,next) => {
       messages:[]
     }
     firstMessage = {
-      id:UUID.v4(),
+      _id:UUID.v4(),
       text:msg,
       createdAt:new Date(),
       user:{
-        id:userOneId,
+        _id:userOneId,
         name: fullName,
         avatar:avatar
       }
@@ -51,6 +51,7 @@ router.post('/myFirstBotConversation',(req,res,next) => {
       .exec()
       .then(result => {
         chatItem = {
+          UserId:userTwoId,
           chatId:firstConversation.chatId,
           fullName: fullName,
           avatar: avatar,

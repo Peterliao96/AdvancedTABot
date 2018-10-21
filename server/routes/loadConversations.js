@@ -13,6 +13,7 @@ router.post('/',(req,res,next) => {
     chatList = result.conversations.map(item => {
       let insertObject = {}
       insertObject.chatId = item.chatId
+      insertObject.UserId = UserId
       insertObject.lastMsg = item.messages[item.messages.length - 1].text
       insertObject.createdAt = item.messages[item.messages.length - 1].createdAt
       BotArr.forEach(function(bot){

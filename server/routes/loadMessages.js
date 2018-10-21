@@ -12,7 +12,7 @@ router.post('/',(req,res,next) => {
       }
     })
     res.send({
-      messages:chatMsg,
+      messages:chatMsg.reverse(),
       id:chatId
     })
   })

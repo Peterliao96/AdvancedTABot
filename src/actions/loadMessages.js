@@ -5,6 +5,7 @@ import {
   LOAD_MESSAGES_SUCCESS,
   SEND_MESSAGE
 } from '../reducers/messages'
+import {loadConversation} from './loadConversations'
 function loadingMsg(){
   return {
     type:LOAD_MESSAGES
@@ -39,8 +40,38 @@ export const loadMessages = data => dispatch => {
   });
 };
 
-export const sendMessage = (conversationId, message) => ({
-  type: 'SEND_MESSAGE',
-  conversationId,
-  message,
-});
+export const createMessage = data => dispatch => {
+  callApi('/sendMessage/bot',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(res => {
+    dispatch(sendMessage(data.chatId,res.msg))
+    const loadData = {
+      UserId:data.UserId,
+      chatId:data.chatId
+    }
+    const loadConversationData = {
+      UserId:data.UserId
+    }
+    dispatch(loadMessages(loadData))
+    dispatch(loadConversation(loadConversationData))
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
+
+function sendMessage(id,message){
+  return dispatch => {
+    dispatch({
+      type:SEND_MESSAGE,
+      id,
+      message
+    })
+  }
+}

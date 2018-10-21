@@ -13,7 +13,7 @@ import {GiftedChat, Actions, Bubble, SystemMessage} from 'react-native-gifted-ch
 import CustomView from '../../components/CustomView';
 import CustomActions from '../../components/CustomActions';
 import {connect} from 'react-redux';
-import {loadMessages} from '../../actions/loadMessages';
+import {loadMessages,createMessage} from '../../actions/loadMessages';
 const message = require('../../components/constant').message;
 const oldMessage = require('../../components/constant').oldMessage;
 import Container from '../../components/DrawerContainer';
@@ -113,11 +113,38 @@ class ChatScreen extends Component{
   }
 
   onSend(messages = []) {
-    this.setState((previousState) => {
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      const data = {
+        UserId: this.props.auth.userFBData.user.providerData[0].uid,
+        chatId:this.props.navigation.getParam('chatId'),
+        message:messages[0]
+      }
+      this.props.appendMsg(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId,
+        chatId:this.props.navigation.getParam('chatId'),
+        message:messages[0]
+      }
+      this.props.appendMsg(data)
+    } else {
+      AsyncStorage.getItem('UserInfo').then(UserInfo => {
+        if(UserInfo){
+          var UserInfo = JSON.parse(UserInfo);
+          const data = {
+            UserId: UserInfo.user.myId,
+            chatId:this.props.navigation.getParam('chatId'),
+            message:messages[0]
+          }
+          this.props.appendMsg(data)
+        }
+      })
+    }
+    /*this.setState((previousState) => {
       return {
         messages: GiftedChat.append(previousState.messages, messages),
       };
-    });
+    });*/
 
     // for demo purpose
     this.answerDemo(messages);
@@ -270,12 +297,12 @@ class ChatScreen extends Component{
           <GiftedChat
       messages={this.props.messages[navigation.getParam('chatId')]}
       onSend={this.onSend}
-      loadEarlier={this.state.loadEarlier}
-      onLoadEarlier={this.onLoadEarlier}
-      isLoadingEarlier={this.state.isLoadingEarlier}
+      //loadEarlier={this.state.loadEarlier}
+      //onLoadEarlier={this.onLoadEarlier}
+      //isLoadingEarlier={this.state.isLoadingEarlier}
 
       user={{
-        _id: 1, // sent messages should have same user._id
+        _id: this.props.navigation.getParam('id'), // sent messages should have same user._id
       }}
 
       renderActions={this.renderCustomActions}
@@ -295,7 +322,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  OnLoadMsg: data => dispatch(loadMessages(data))
+  OnLoadMsg: data => {dispatch(loadMessages(data))},
+  appendMsg: data => {dispatch(createMessage(data))}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(ChatScreen)

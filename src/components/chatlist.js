@@ -16,7 +16,7 @@ const ChatList = (props) => {
   return (
   <ListItem height={80}>
   <Swipeout right={swipeBtns}
-        autoClose='true'
+        autoClose={true}
         backgroundColor= 'transparent'>
   <TouchableOpacity onPress={props.onPress}>
   <View style={{flexDirection:'row'}}>

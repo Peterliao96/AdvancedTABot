@@ -2,7 +2,7 @@ export const LOAD_MESSAGES_FAILURE = 'LOAD_MESSAGES_FAILURE';
 export const LOAD_MESSAGES_SUCCESS = 'LOAD_MESSAGES_SUCCESS';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const LOAD_MESSAGES = 'LOAD_MESSAGES';
-
+import {GiftedChat, Actions, Bubble, SystemMessage} from 'react-native-gifted-chat';
 const initState = {
   loading:false
 };
@@ -25,18 +25,18 @@ export default(state = initState, action) => {
       return initState;
     }
     case SEND_MESSAGE: {
-      if (state[action.conversationId]) {
+      if (state[action.id]) {
         return {
           ...state,
-          [action.conversationId]: [
-            ...state[action.conversationId],
-            action.message,
-          ],
+          [action.id]: [
+            ...state[action.id],
+            action.message
+          ]
         };
       }
       return {
         ...state,
-        [action.conversationId]: [action.message],
+        [action.id]: [action.message],
       };
     }
     default: {
