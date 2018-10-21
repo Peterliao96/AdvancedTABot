@@ -12,17 +12,19 @@ import {
 import {GiftedChat, Actions, Bubble, SystemMessage} from 'react-native-gifted-chat';
 import CustomView from '../../components/CustomView';
 import CustomActions from '../../components/CustomActions';
+import {connect} from 'react-redux';
+import {loadMessages} from '../../actions/loadMessages';
 const message = require('../../components/constant').message;
 const oldMessage = require('../../components/constant').oldMessage;
 import Container from '../../components/DrawerContainer';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle } from 'react-native-material-ui';
 import { Header, Title, Left, Icon, Right, Button, Body, Content, Card, CardItem } from "native-base";
-export default class ChatScreen extends Component{
+
+class ChatScreen extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      messages: [],
       loadEarlier: true,
       typingText: null,
       isLoadingEarlier: false,
@@ -49,13 +51,41 @@ export default class ChatScreen extends Component{
     },
   }
 
+  isEmpty(obj){
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+  }
+
   componentWillMount() {
     this._isMounted = true;
-    this.setState(() => {
-      return {
-        messages: message,
-      };
-    });
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      const data = {
+        UserId: this.props.auth.userFBData.user.providerData[0].uid,
+        chatId:this.props.navigation.getParam('chatId')
+      }
+      this.props.OnLoadMsg(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId,
+        chatId:this.props.navigation.getParam('chatId')
+      }
+      this.props.OnLoadMsg(data)
+    } else {
+      AsyncStorage.getItem('UserInfo').then(UserInfo => {
+        if(UserInfo){
+          var UserInfo = JSON.parse(UserInfo);
+          const data = {
+            UserId: UserInfo.user.myId,
+            chatId:this.props.navigation.getParam('chatId')
+          }
+          this.props.OnLoadMsg(data)
+        }
+      })
+    }
+
   }
 
   componentWillUnmount() {
@@ -138,7 +168,7 @@ export default class ChatScreen extends Component{
           user: {
             _id: 2,
             name: 'React Native',
-            avatar: 'https://facebook.github.io/react/img/logo_og.png',
+            avatar: 'https://facebook.github.io/react/img/logo.png',
           },
         }),
       };
@@ -231,12 +261,14 @@ export default class ChatScreen extends Component{
   };
 
   render(){
+    const {auth:{userFBData,FBuser}} = this.props;
+    const {navigation,OnLoadMsg} = this.props;
     return (
       <Container>
           <StatusBar animated={true} backgroundColor="rgba(0, 0, 0, 0.2)" translucent />
 
           <GiftedChat
-      messages={this.state.messages}
+      messages={this.props.messages[navigation.getParam('chatId')]}
       onSend={this.onSend}
       loadEarlier={this.state.loadEarlier}
       onLoadEarlier={this.onLoadEarlier}
@@ -257,6 +289,16 @@ export default class ChatScreen extends Component{
   }
 }
 
+const mapStateToProps = (state) => ({
+  auth:state.auth,
+  messages:state.messages
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  OnLoadMsg: data => dispatch(loadMessages(data))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(ChatScreen)
 const styles = StyleSheet.create({
   toolbarContainer:{
     backgroundColor:COLOR.blue300,

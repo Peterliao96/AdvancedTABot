@@ -8,6 +8,7 @@ import ChatList from '../../components/chatlist';
 import ChatScreen from '../ChatScreen/ChatScreen';
 import ActionBar from 'react-native-action-bar';
 import {loadConversation} from '../../actions/loadConversations';
+import {deleteConversation} from '../../actions/deleteConversation';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle } from 'react-native-material-ui';
 /**
@@ -80,6 +81,33 @@ class HomeScreen extends Component {
     }
   }
 
+  async deleteNote(chatId){
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      const data = {
+        UserId: this.props.auth.userFBData.user.providerData[0].uid,
+        chatId:chatId
+      }
+      this.props.OnDeleteConversation(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId,
+        chatId:chatId
+      }
+      this.props.OnDeleteConversation(data)
+    } else {
+      AsyncStorage.getItem('UserInfo').then(UserInfo => {
+        if(UserInfo){
+          var UserInfo = JSON.parse(UserInfo);
+          const data = {
+            UserId: UserInfo.user.myId,
+            chatId:chatId
+          }
+          this.props.OnDeleteConversation(data)
+        }
+      })
+    }
+  }
+
 
 
 
@@ -87,25 +115,6 @@ class HomeScreen extends Component {
     const {conversations:{conversations}} = this.props
     const {auth:{FBuser,userFBData}} = this.props
     const {loadConversationList} = this.props;
-    const data = [{
-      id:"1",
-      url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-      name: 'Peter Liao',
-      lastMsg:'Hello world',
-      lastTime: '12:59PM'
-    },{
-      id:"2",
-      url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-      name: 'Peter Liao',
-      lastMsg:'你好',
-      lastTime: '4:32PM'
-    },{
-      id:"3",
-      url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-      name: 'Peter Liao',
-      lastMsg:'你吃完饭了嘛？',
-      lastTime: '7:30PM'
-    }]
     return (
       //<View style={styles.container}>
       <ScrollView>
@@ -116,7 +125,7 @@ class HomeScreen extends Component {
       keyExtractor={(item,index) => item.chatId}
       renderItem={({item}) => {
         return (
-          <ChatList url={item.avatar} name={item.fullName} lastTime={item.createdAt} lastMsg={item.lastMsg} onPress={() => this.props.navigation.push('ChatScreen')}/>
+          <ChatList url={item.avatar} name={item.fullName} lastTime={item.createdAt} lastMsg={item.lastMsg} deleteItem={this.deleteNote.bind(this,item.chatId)}onPress={() => this.props.navigation.push('ChatScreen',{chatId:item.chatId})}/>
         )
       }}/>
       </Container>
@@ -132,7 +141,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadConversationList:data => dispatch(loadConversation(data))
+  loadConversationList:data => {dispatch(loadConversation(data))},
+  OnDeleteConversation: data => {dispatch(deleteConversation(data))}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(HomeScreen)

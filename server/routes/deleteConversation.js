@@ -5,15 +5,17 @@ const User = require('../models/user');
 router.post('/',(req,res,next) => {
   UserId = req.body.UserId;
   chatId = req.body.chatId;
-  User.findOne({UserId:UserId}).then(result => {
-    result.conversations.forEach(function(chat){
-      if(chat.chatId === chatId){
-        chatMsg = chat.messages
+  User.updateOne({UserId:UserId},{
+    $pull:{
+      conversations:{
+        chatId: chatId
       }
-    })
+    }
+  })
+  .exec()
+  .then(result => {
     res.send({
-      messages:chatMsg,
-      id:chatId
+      message:'The conversation is delted!'
     })
   })
 })

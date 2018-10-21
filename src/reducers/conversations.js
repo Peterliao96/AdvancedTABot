@@ -4,15 +4,25 @@ export const LOAD_CONVERSATIONS_SUCCESS = 'LOAD_CONVERSATIONS_SUCCESS';
 export const CREATE_CONVERSATION_SUCCESS = 'CREATE_CONVERSATION_SUCCESS';
 export const CREATE_CONVERSATION_FAILURE = 'CREATE_CONVERSATION_FAILURE';
 export const SET_CURRENT_CONVERSATION = 'SET_CURRENT_CONVERSATION';
+export const DELETE_CONVERSATION = 'DELETE_CONVERSATION';
+export const DELETE_CONVERSATION_SUCCESS = 'DELETE_CONVERSATION_SUCCESS';
+export const DELETE_CONVERSATION_FAILURE = 'DELETE_CONVERSATION_FAILURE';
 
 const initState = {
   currentConversationId: '',
   conversations: [],
-  isLoading:false
+  isLoading:false,
+  isDeleting:false
 };
 
 export default(state = initState, action) =>{
   switch (action.type) {
+    case DELETE_CONVERSATION:
+      return {...state, isDeleting:true}
+    case DELETE_CONVERSATION_FAILURE:
+      return {...state, isDeleting:false}
+    case DELETE_CONVERSATION_SUCCESS:
+      return {...state, isDeleting:false,conversations:action.conversations}
     case LOAD_CONVERSATIONS: {
       return { ...state,isLoading:true}
     }

@@ -27,12 +27,14 @@ const uploadAvatarRouter = require('./routes/uploadAvatar');
 const createConversationsRouter = require('./routes/createConversations');
 const createMessageRouter = require('./routes/createMessage');
 const loadConversationsRouter = require('./routes/loadConversations');
-//const loadMessagesRouter = require('./routes/loadMessages');*/
+const loadMessagesRouter = require('./routes/loadMessages');
 const loginRouter = require('./routes/login');
 const loadSearchUserRouter = require('./routes/loadSearchUser');
 const loadFriendsRouter = require('./routes/loadFriends');
 const deleteFriendRouter = require('./routes/deleteFriend');
 const editBotRouter = require('./routes/editBot');
+const deleteConversationRouter = require('./routes/deleteConversation');
+
 app.use(morgan('dev'));
 /*app.use(jwt({
   secret: 'asfasfasdf',
@@ -66,6 +68,8 @@ app.use('/editBot',editBotRouter);
 app.use('/createConversation',createConversationsRouter);
 app.use('/createMessage',createMessageRouter);
 app.use('/loadConversations',loadConversationsRouter);
+app.use('/deleteConversation',deleteConversationRouter);
+app.use('/loadMessages',loadMessagesRouter);
 //app.use('/loadFriends',loadFriendRouter);
 
 
