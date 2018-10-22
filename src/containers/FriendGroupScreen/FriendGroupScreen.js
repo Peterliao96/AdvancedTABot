@@ -69,14 +69,14 @@ class FriendGroupScreen extends Component{
   >
     <FlatList
       data={BotsArr}
-      renderItem={({ item }) => {
+      renderItem={({ item,index }) => {
         return (
           <TouchableOpacity>
           <ListItem
             roundAvatar
             title={item.fullName}
             subtitle={item.description}
-            onPress={() => this.props.navigation.push('BotsProfileScreen',{UserId:item.UserId, fullName:item.fullName, avatar:item.avatar,description:item.description})}
+            onPress={() => this.props.navigation.push('BotsProfileScreen',{index:index,UserId:item.UserId, fullName:item.fullName, avatar:item.avatar,description:item.description})}
             avatar={{uri:item.avatar}}
             containerStyle={{ borderBottomWidth: 0 }}
             bottomDivider={true}

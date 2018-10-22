@@ -303,6 +303,8 @@ class ChatScreen extends Component{
 
       user={{
         _id: this.props.navigation.getParam('id'), // sent messages should have same user._id
+        name: this.props.navigation.getParam('myName'),
+        avatar: this.props.navigation.getParam('myAvatar')
       }}
 
       renderActions={this.renderCustomActions}

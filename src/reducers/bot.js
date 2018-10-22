@@ -16,12 +16,18 @@ export const DELETE_BOT_SUCCESS = 'DELETE_BOT_SUCCESS';
 export const GET_FRIENDLIST = 'GET_FRIENDLIST';
 export const GET_FRIENDLIST_FAILURE = 'GET_FRIENDLIST_FAILURE';
 export const GET_FRIENDLIST_SUCCESS = 'GET_FRIENDLIST_SUCCESS';
+export const SWITCH_TRAIN_STATE = 'SWITCH_TRAIN_STATE';
+export const SWITCH_NOTIFICATION_STATE = 'SWITCH_NOTIFICATION_STATE';
+export const SWITCH_AUTOREPLY_STATE = 'SWITCH_AUTOREPLY_STATE';
 
 const initState = {
   isLoading: false,
   isDeleting: false,
   isGetBotLoading:false,
   isEditing:false,
+  switchTrainState:false,
+  switchNotificationState:false,
+  switchAutoReplyState:false,
   isGettingFriendList:false,
   friendData: {
     fullName:'',
@@ -41,6 +47,24 @@ const initState = {
 
 export default(state = initState, action) => {
   switch (action.type) {
+    case SWITCH_TRAIN_STATE:
+      return {
+        ...state,
+        switchTrainState:action.value,
+        switchAutoReplyState:action.value
+      }
+    case SWITCH_NOTIFICATION_STATE:
+      return {
+        ...state,
+        switchNotificationState:action.value
+      }
+    case SWITCH_AUTOREPLY_STATE:
+      if(!state.switchTrainState){
+        return{
+          ...state,
+          switchAutoReplyState:action.value
+        }
+      }
     case EDIT_BOT:
       return {
         ...state,

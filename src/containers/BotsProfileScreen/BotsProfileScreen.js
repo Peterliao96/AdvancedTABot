@@ -69,6 +69,14 @@ class BotsProfileScreen extends Component{
     }
   }
 
+  async switchPages(id,UserId,fullName,avatar,description,index){
+    if(id === '2'){
+      this.props.navigation.push('editBotScreen',{id:id,UserId:UserId,avatar:avatar,description:description,fullName:fullName})
+    } else if (id === '1'){
+      this.props.navigation.push('BotSettingScreen',{id:id,UserId:UserId,avatar:avatar,description:description,fullName:fullName,index:index})
+    }
+  }
+
 
   render() {
     const data = [{
@@ -87,6 +95,7 @@ class BotsProfileScreen extends Component{
     const {auth: {userFBData}} = this.props
     const {bot: {isDeleting}} = this.props
     const { onLogoutPress,navigation,removeBot } = this.props
+    const index = navigation.getParam('index');
     const UserId = navigation.getParam('UserId')
     const avatar = navigation.getParam('avatar')
     const description = navigation.getParam('description')
@@ -107,7 +116,7 @@ class BotsProfileScreen extends Component{
               leftIcon={{name:item.icon}}
               title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
-              onPress={() => this.props.navigation.push('editBotScreen',{id:item.id,UserId:UserId,avatar:avatar,description:description,fullName:fullName})}
+              onPress={this.switchPages.bind(this,item.id,UserId,fullName,avatar,description,index)}
             />
             </TouchableOpacity>
           )

@@ -35,6 +35,9 @@ const deleteFriendRouter = require('./routes/deleteFriend');
 const editBotRouter = require('./routes/editBot');
 const deleteConversationRouter = require('./routes/deleteConversation');
 const sendMessageRouter = require('./routes/sendMessage');
+const showBotSettingStateRouter = require('./routes/showBotSettingState');
+const editAutoReplyRouter = require('./routes/editAutoReply');
+
 app.use(morgan('dev'));
 /*app.use(jwt({
   secret: 'asfasfasdf',
@@ -71,6 +74,8 @@ app.use('/loadConversations',loadConversationsRouter);
 app.use('/deleteConversation',deleteConversationRouter);
 app.use('/loadMessages',loadMessagesRouter);
 app.use('/sendMessage',sendMessageRouter);
+app.use('/showBotSettingState',showBotSettingStateRouter);
+app.use('/editAutoReply',editAutoReplyRouter);
 //app.use('/loadFriends',loadFriendRouter);
 
 

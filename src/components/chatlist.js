@@ -14,7 +14,7 @@ const ChatList = (props) => {
     }];
 
   return (
-  <ListItem height={80}>
+  <ListItem height={80} >
   <Swipeout right={swipeBtns}
         autoClose={true}
         backgroundColor= 'transparent'>
@@ -42,7 +42,7 @@ const ChatList = (props) => {
           backgroundColor: 'transparent',
           fontSize: 12,
           color: '#000',
-          marginLeft:120,
+          marginHorizontal:70,
           marginTop:10
         }}>
           {moment(props.lastTime).from(Date.now())}

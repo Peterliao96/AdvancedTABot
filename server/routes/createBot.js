@@ -17,7 +17,11 @@ router.post('/',(req,res,next) => {
         UserId:BotId,
         fullName:fullName,
         description: description,
-        avatar:avatar
+        avatar:avatar,
+        TrainState:false,
+        NotificationState:false,
+        AutoReplyState:false,
+        autoReply:'I am busy now. Please leave me a message here. Thanks!'
       }]
     }
   })

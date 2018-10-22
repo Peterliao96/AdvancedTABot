@@ -9,6 +9,7 @@ import AddFriendScreen from '../addFriendScreen/addFriendScreen';
 import FriendGroupScreen from '../FriendGroupScreen/FriendGroupScreen';
 import FriendProfileScreen from '../friendProfileScreen/friendProfileScreen';
 import CreateBotScreen from '../CreateBotScreen/CreateBotScreen';
+import BotSettingScreen from '../BotSettingScreen/BotSettingScreen';
 import RequestScreen from './RequestScreen';
 import editBotScreen from '../editBotScreen/editBotScreen';
 import UserProfileScreen from '../UserProfileScreen/UserProfileScreen';
@@ -49,6 +50,9 @@ const SwitchTabs = createMaterialTopTabNavigator({
       },
       BotsProfileScreen:{
         screen: BotsProfileScreen
+      },
+      BotSettingScreen:{
+        screen:BotSettingScreen
       },
       editBotScreen:{
         screen: editBotScreen

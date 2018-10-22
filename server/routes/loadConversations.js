@@ -14,7 +14,17 @@ router.post('/',(req,res,next) => {
       let insertObject = {}
       insertObject.chatId = item.chatId
       insertObject.UserId = UserId
-      insertObject.lastMsg = item.messages[item.messages.length - 1].text
+      insertObject.myName = result.fullName
+      insertObject.myAvatar = result.avatar
+      if(item.messages[item.messages.length - 1].text && item.messages[item.messages.length - 1].text.length > 30 ){
+        insertObject.lastMsg = item.messages[item.messages.length - 1].text.slice(0,30) + '...'
+      } else if (item.messages[item.messages.length - 1].text && item.messages[item.messages.length - 1].text.length <= 30) {
+        insertObject.lastMsg = item.messages[item.messages.length - 1].text
+      } else if (item.messages[item.messages.length-1].location){
+        insertObject.lastMsg = '[location]'
+      } else if (item.messages[item.messages.length-1].image){
+        insertObject.lastMsg = '[image]'
+      }
       insertObject.createdAt = item.messages[item.messages.length - 1].createdAt
       BotArr.forEach(function(bot){
         if(bot.UserId === item.userOneId){
