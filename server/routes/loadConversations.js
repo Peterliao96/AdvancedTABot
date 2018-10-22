@@ -30,6 +30,7 @@ router.post('/',(req,res,next) => {
         if(bot.UserId === item.userOneId){
           insertObject.fullName = bot.fullName
           insertObject.avatar = bot.avatar
+          insertObject.BotId = bot.UserId
         }
       })
       return insertObject

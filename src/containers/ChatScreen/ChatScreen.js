@@ -13,7 +13,7 @@ import {GiftedChat, Actions, Bubble, SystemMessage} from 'react-native-gifted-ch
 import CustomView from '../../components/CustomView';
 import CustomActions from '../../components/CustomActions';
 import {connect} from 'react-redux';
-import {loadMessages,createMessage} from '../../actions/loadMessages';
+import {loadMessages,createMessage,autoReplyMessage} from '../../actions/loadMessages';
 const message = require('../../components/constant').message;
 const oldMessage = require('../../components/constant').oldMessage;
 import Container from '../../components/DrawerContainer';
@@ -147,10 +147,18 @@ class ChatScreen extends Component{
     });*/
 
     // for demo purpose
-    this.answerDemo(messages);
+    for(var i = 0;i<this.props.bot.BotsArr.length;i++){
+      if(this.props.bot.BotsArr[i].UserId === this.props.navigation.getParam('BotId')){
+        let TargetBot = this.props.bot.BotsArr[i]
+        if(TargetBot.AutoReplyState){
+          this.answerDemo(messages,TargetBot.autoReply);
+        }
+        break;
+      }
+    }
   }
 
-  answerDemo(messages) {
+  answerDemo(messages,reply) {
     if (messages.length > 0) {
       if ((messages[0].image || messages[0].location) || !this._isAlright) {
         this.setState((previousState) => {
@@ -171,7 +179,7 @@ class ChatScreen extends Component{
           } else {
             if (!this._isAlright) {
               this._isAlright = true;
-              this.onReceive('Alright');
+              this.onReceive(reply);
             }
           }
         }
@@ -186,20 +194,36 @@ class ChatScreen extends Component{
   }
 
   onReceive(text) {
-    this.setState((previousState) => {
-      return {
-        messages: GiftedChat.append(previousState.messages, {
-          _id: Math.round(Math.random() * 1000000),
-          text: text,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://facebook.github.io/react/img/logo.png',
-          },
-        }),
-      };
-    });
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      const data = {
+        UserId: this.props.auth.userFBData.user.providerData[0].uid,
+        chatId:this.props.navigation.getParam('chatId'),
+        BotId : this.props.navigation.getParam('BotId'),
+        text: text
+      }
+      this.props.appendReMsg(data)
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId,
+        chatId:this.props.navigation.getParam('chatId'),
+        BotId : this.props.navigation.getParam('BotId'),
+        text: text
+      }
+      this.props.appendReMsg(data)
+    } else {
+      AsyncStorage.getItem('UserInfo').then(UserInfo => {
+        if(UserInfo){
+          var UserInfo = JSON.parse(UserInfo);
+          const data = {
+            UserId: UserInfo.user.myId,
+            chatId:this.props.navigation.getParam('chatId'),
+            BotId : this.props.navigation.getParam('BotId'),
+            text: text
+          }
+          this.props.appendReMsg(data)
+        }
+      })
+    }
   }
 
   renderCustomActions(props) {
@@ -289,7 +313,7 @@ class ChatScreen extends Component{
 
   render(){
     const {auth:{userFBData,FBuser}} = this.props;
-    const {navigation,OnLoadMsg} = this.props;
+    const {navigation,OnLoadMsg,appendMsg,appendReMsg} = this.props;
     return (
       <Container>
           <StatusBar animated={true} backgroundColor="rgba(0, 0, 0, 0.2)" translucent />
@@ -320,12 +344,14 @@ class ChatScreen extends Component{
 
 const mapStateToProps = (state) => ({
   auth:state.auth,
+  bot:state.bot,
   messages:state.messages
 })
 
 const mapDispatchToProps = (dispatch) => ({
   OnLoadMsg: data => {dispatch(loadMessages(data))},
-  appendMsg: data => {dispatch(createMessage(data))}
+  appendMsg: data => {dispatch(createMessage(data))},
+  appendReMsg: data => {dispatch(autoReplyMessage(data))}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(ChatScreen)

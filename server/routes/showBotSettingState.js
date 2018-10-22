@@ -67,6 +67,35 @@ router.post('/',(req,res,next) => {
         .exec()
       }
     })
+  } else if (id === '4'){
+    User.findOne({UserId:UserId}).then(result => {
+      for(var i = 0;i<result.bots.length;i++){
+        if(result.bots[i].UserId === BotId){
+          bot = result.bots[i]
+        }
+      }
+      if(bot.TrainState){
+        User.updateOne({UserId:UserId},{
+            $set:{
+              "bots.$[elem].AutoReplyAIState":false
+            }
+          },
+          {
+            arrayFilters:[{"elem.UserId": BotId}]
+        })
+        .exec()
+      } else {
+        User.updateOne({UserId:UserId},{
+            $set:{
+              "bots.$[elem].AutoReplyAIState":value
+            }
+          },
+          {
+            arrayFilters:[{"elem.UserId": BotId}]
+        })
+        .exec()
+      }
+    })
   }
   res.send({
     msg:'It is updated'

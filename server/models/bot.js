@@ -7,7 +7,8 @@ const botSchema = new mongoose.Schema({
   autoReply:String,
   TrainState:Boolean,
   NotificationState:Boolean,
-  AutoReplyState:Boolean
+  AutoReplyState:Boolean,
+  AutoReplyAIState:Boolean
 })
 
 module.exports = mongoose.model('Bot',botSchema);

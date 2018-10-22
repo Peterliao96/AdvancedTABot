@@ -102,6 +102,10 @@ class BotSettingScreen extends Component{
       id:"3",
       title:"Auto reply (customized)",
       icon:"reply"
+    },{
+      id:"4",
+      title:"Auto reply (AI)",
+      icon:"comment"
     }]
     const {bot:{BotsArr}} = this.props
     const { onLogoutPress,navigation,switchState,changeText } = this.props
@@ -156,6 +160,20 @@ class BotSettingScreen extends Component{
                 leftIcon={{name:item.icon}}
                 switchButton
                 switched={BotsArr[index].AutoReplyState}
+                hideChevron
+                onSwitch={(value) => this._switchState(value,item.id)}
+                containerStyle={{ borderBottomWidth: 0 }}
+              />
+              </TouchableOpacity>
+            )
+          } else if (item.id === '4'){
+            return (
+              <TouchableOpacity>
+              <ListItem
+                title={item.title}
+                leftIcon={{name:item.icon}}
+                switchButton
+                switched={BotsArr[index].AutoReplyAIState}
                 hideChevron
                 onSwitch={(value) => this._switchState(value,item.id)}
                 containerStyle={{ borderBottomWidth: 0 }}

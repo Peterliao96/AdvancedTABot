@@ -21,6 +21,7 @@ router.post('/',(req,res,next) => {
         TrainState:false,
         NotificationState:false,
         AutoReplyState:false,
+        AutoReplyAIState:false,
         autoReply:'I am busy now. Please leave me a message here. Thanks!'
       }]
     }

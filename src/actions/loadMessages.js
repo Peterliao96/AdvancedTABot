@@ -66,6 +66,31 @@ export const createMessage = data => dispatch => {
   })
 }
 
+export function autoReplyMessage(data){
+  return dispatch => {
+    callApi('/sendMessage/autoReply',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(res => {
+      dispatch(sendMessage(data.chatId,res.msg))
+      const loadData = {
+        UserId:data.UserId,
+        chatId:data.chatId
+      }
+      const loadConversationData = {
+        UserId:data.UserId
+      }
+      dispatch(loadMessages(loadData))
+      dispatch(loadConversation(loadConversationData))
+    })
+  }
+}
+
 function sendMessage(id,message){
   return dispatch => {
     dispatch({
