@@ -76,12 +76,20 @@ router.post('/myFirstFriendConversation',(req,res,next) => {
     userTwoId:userTwoId,
     messages:[]
   }
-  firstMessage = {
-    id:UUID.v4(),
-    text:msg,
-    createdAt:new Date(),
-    user:userOneId
-  }
+  User.findOne({UserId:userOneId}).then(result => {
+    fullName = result.fullName;
+    avatar = result.avatar;
+    firstMessage = {
+      _id:UUID.v4(),
+      text:msg,
+      createdAt:new Date(),
+      user:{
+        _id:userOneId,
+        name:fullName,
+        avatar:avatar
+      }
+    }
+  })
   User.updateOne({UserId:userOneId},{
     "$push":{
       conversations:[firstConversation]
@@ -119,6 +127,7 @@ router.post('/myFirstFriendConversation',(req,res,next) => {
           User.findOne({UserId:userTwoId})
           .then(result => {
             chatItem = {
+              UserId:userOneId,
               chatId:firstConversation.chatId,
               fullName:result.fullName,
               avatar:result.avatar,

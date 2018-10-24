@@ -63,7 +63,6 @@ class FriendGroupScreen extends Component{
     const {listBots, listFriends} = this.props;
     return (
       <View>
-      <Text style={{marginLeft:15,fontSize:17,marginTop:10}}>Bots</Text>
       <List
     containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}
   >
@@ -87,7 +86,6 @@ class FriendGroupScreen extends Component{
       keyExtractor={(item,index) => item.UserId}
     />
   </List>
-  <Text style={{marginLeft:15,fontSize:17,marginTop:10}}>Friends</Text>
   <List>
   <FlatList
     data={friendList}

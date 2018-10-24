@@ -8,7 +8,7 @@ import {
   GET_FRIENDLIST_FAILURE,
   GET_FRIENDLIST_SUCCESS
 } from '../reducers/bot';
-
+import {loadConversation} from './loadConversations';
 import callApi from '../helpers/api';
 
 function gettingFriendList(){
@@ -96,6 +96,17 @@ export function approveRequest(data){
       .then(response => response.json())
       .then(res => {
           dispatch(getFriendListSuccess(res.friendList))
+          callApi('/createConversation/myFirstFriendConversation',{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          })
+          .then(response => response.json())
+          .then(res => {
+            dispatch(loadConversation(data.UserId))
+          })
       })
       .catch(err => {
         dispatch(getFriendListFailure(err))

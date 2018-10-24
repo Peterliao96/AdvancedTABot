@@ -15,7 +15,7 @@ import AuthScreen from './containers/AuthScreen'
 import SettingsNavigator from './containers/SettingsScreen/SettingsNavigator';
 import RequestScreenNavigator from './containers/RequestScreen';
 import HomeScreenNavigator from './containers/HomeScreen';
-import DiscoverScreen from './containers/DiscoverScreen/DiscoverScreen';
+import DiscoverNavigator from './containers/DiscoverScreen/DiscoverNavigator'
 const deviceW = Dimensions.get('window').width
 import TabNavigator from 'react-native-tab-navigator';
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -106,9 +106,7 @@ class AppNavigator extends Component {
             renderIcon={() => <Icon name="compass" size={px2dp(22)} color="#666"/>}
             renderSelectedIcon={() => <Icon name="compass" size={px2dp(22)} color="#3496f0"/>}
             onPress={() => this.setState({selectedTab: 'discover'})}>
-            <DiscoverScreen
-
-            />
+            <DiscoverNavigator/>
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'setting'}

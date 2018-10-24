@@ -7,45 +7,38 @@ import {
 var PropTypes = require('prop-types');
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle,Avatar } from 'react-native-material-ui';
 import CustomButton from '../../components/CustomButton'
-import  Icon  from 'react-native-vector-icons/FontAwesome';
-export default class DiscoverScreen extends Component{
+export default class myPostingScreen extends Component{
   static propTypes = {
     logout: PropTypes.func
   }
 
-  static navigationOptions = ({navigation}) => {
-    return {
-      headerTitle:'Discover',
-      headerStyle:{
-        backgroundColor:COLOR.blue500
-      },
-      headerTitleStyle:{
-        color:'#FFF'
-      },
-      headerRight:(
-        <Icon name='edit'
-        onPress={() => navigation.navigate('PostDiaryScreen')}
-        color="#fff"
-      />
-    ),
-    headerRightContainerStyle:{
-      marginRight:20
-    }
+  static navigationOptions = {
+    headerTitle:'My posting',
+    headerStyle:{
+      backgroundColor:COLOR.blue500
+    },
+    headerTitleStyle:{
+      color:'#FFF'
+    },
   }
-}
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text> Hello </Text>
-        <CustomButton
-          text={'Logout'}
-          onPress={this.props.logout}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-      </View>
-    )
+
+    const {navigation} = this.props
+    const id = navigation.getParam('id')
+
+    if(id === "3"){
+      return (
+        <View>
+          <CustomButton
+            text={'Logout'}
+            onPress={this.props.logout}
+            buttonStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+        </View>
+      )
+    }
   }
 }
 

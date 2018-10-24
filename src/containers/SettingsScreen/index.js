@@ -86,7 +86,7 @@ class SettingsScreen extends Component{
     } else if (id === '2'){
       this.props.navigation.push('MoreScreen',{id:id})
     } else if( id === '3'){
-      this.props.navigation.push('MoreScreen',{id:id})
+      this.props.navigation.push('myPostingScreen',{id:id})
     } else if (id === '4'){
       let { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status !== 'granted') {

@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import SettingsScreen from './index'
 import MoreScreen from '../MoreScreen/MoreScreen';
+import myPostingScreen from '../myPostingScreen/myPostingScreen';
 import locationScreen from '../locationScreen/locationScreen'
 import {createStackNavigator,createMaterialTopTabNavigator} from 'react-navigation';
 import {connect} from 'react-redux';
@@ -13,6 +14,7 @@ import {connect} from 'react-redux';
 const SettingsSwitchPages = createStackNavigator({
   SettingsScreen:{screen:SettingsScreen},
   MoreScreen:{screen:MoreScreen},
+  myPostingScreen:{screen:myPostingScreen},
   locationScreen: {screen:locationScreen}
 })
 
