@@ -22,6 +22,7 @@ export default class locationScreen extends Component{
 
   static navigationOptions = {
     headerTitle:'My current location',
+    headerTintColor: 'white',
     headerStyle:{
       backgroundColor:COLOR.blue500
     },

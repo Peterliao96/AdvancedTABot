@@ -14,6 +14,7 @@ export default class GroupChatSetupScreen extends Component{
 
   static navigationOptions = {
     headerTitle:'Group Chat Setup',
+    headerTintColor: 'white',
     headerStyle:{
       backgroundColor:COLOR.blue500
     },

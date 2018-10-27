@@ -19,6 +19,7 @@ import DiscoverNavigator from './containers/DiscoverScreen/DiscoverNavigator'
 const deviceW = Dimensions.get('window').width
 import TabNavigator from 'react-native-tab-navigator';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AddButton from './components/AddButton'
 import {connect} from 'react-redux';
 import { simulateLoginProcess,simulateSignInSuccess } from './actions/auth';
 const basePx = 375
@@ -98,6 +99,13 @@ class AppNavigator extends Component {
             renderSelectedIcon={() => <Icon name="users" size={px2dp(22)} color="#3496f0"/>}
             onPress={() => this.setState({selectedTab: 'request'})}>
             <RequestScreenNavigator/>
+          </TabNavigator.Item>
+          <TabNavigator.Item
+            selected={this.state.selectedTab === 'plus'}
+            renderIcon={() => <AddButton />}
+            tabStyle={{marginBottom:70,alignSelf:'center',marginRight:80}}
+            //renderSelectedIcon={() => <AddButton />}
+            onPress={() => this.setState({selectedTab: 'plus'})}>
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'discover'}

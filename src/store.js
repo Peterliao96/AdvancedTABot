@@ -7,6 +7,7 @@ import request from './reducers/request';
 //import friends from './reducers/friends';
 import user from './reducers/user';
 import images from './reducers/images';
+import diary from './reducers/diary';
 //import nav from './reducers/nav';
 import conversations from './reducers/conversations';
 import messages from './reducers/messages';
@@ -15,6 +16,7 @@ import error from './reducers/error';
 const reducers = combineReducers({
   auth,
   //friends,
+  diary,
   images,
   user,
   bot,

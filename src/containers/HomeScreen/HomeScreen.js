@@ -29,7 +29,7 @@ class HomeScreen extends Component {
         color:'#FFF'
       },
       headerRight:(
-        <Icon name='plus'
+        <Icon name='plus' size={20}
         onPress={() => navigation.navigate('GroupChatSetupScreen')}
         color="#fff"
       />
@@ -125,7 +125,7 @@ class HomeScreen extends Component {
       keyExtractor={(item,index) => item.chatId}
       renderItem={({item}) => {
         return (
-          <ChatList url={item.avatar} name={item.fullName} lastTime={item.createdAt} lastMsg={item.lastMsg} deleteItem={this.deleteNote.bind(this,item.chatId)}onPress={() => this.props.navigation.push('ChatScreen',{chatId:item.chatId,id:item.UserId,myName:item.myName,myAvatar:item.myAvatar,BotId:item.BotId})}/>
+          <ChatList url={item.avatar} name={item.fullName} lastTime={item.createdAt} lastMsg={item.lastMsg} deleteItem={this.deleteNote.bind(this,item.chatId)}onPress={() => this.props.navigation.push('ChatScreen',{chatId:item.chatId,id:item.UserId,name:item.fullName,myName:item.myName,myAvatar:item.myAvatar,BotId:item.BotId})}/>
         )
       }}/>
       </Container>

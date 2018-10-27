@@ -48,7 +48,6 @@ router.post('/autoReply',(req,res,next) => {
         avatar:avatar
       }
     }
-    console.log(message)
     User.updateOne({UserId:UserId},{
       "$push":{
         "conversations.$[elem].messages":message

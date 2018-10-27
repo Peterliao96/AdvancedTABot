@@ -17,6 +17,7 @@ import {loadMessages,createMessage,autoReplyMessage} from '../../actions/loadMes
 const message = require('../../components/constant').message;
 const oldMessage = require('../../components/constant').oldMessage;
 import Container from '../../components/DrawerContainer';
+import {Avatar} from 'react-native-elements'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle } from 'react-native-material-ui';
 import { Header, Title, Left, Icon, Right, Button, Body, Content, Card, CardItem } from "native-base";
@@ -41,15 +42,24 @@ class ChatScreen extends Component{
     this._isAlright = null;
   }
 
-  static navigationOptions = {
-    headerTitle:'',
-    headerStyle:{
-      backgroundColor:COLOR.blue500
-    },
-    headerTitleStyle:{
-      color:'#FFF'
-    },
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerTitle:navigation.getParam('name'),
+      headerTintColor: 'white',
+      headerStyle:{
+        backgroundColor:COLOR.blue500
+      },
+      headerTitleStyle:{
+        color:'#FFF'
+      },
+      headerRight:(
+        <Avatar  size="small" rounded source={{uri:navigation.getParam('myAvatar')}}/>
+    ),
+    headerRightContainerStyle:{
+      marginRight:20
+    }
   }
+}
 
   isEmpty(obj){
     for(var key in obj) {

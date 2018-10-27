@@ -28,6 +28,7 @@ const createConversationsRouter = require('./routes/createConversations');
 const createMessageRouter = require('./routes/createMessage');
 const loadConversationsRouter = require('./routes/loadConversations');
 const loadMessagesRouter = require('./routes/loadMessages');
+const recallMessageRouter = require('./routes/recallMessage');
 const loginRouter = require('./routes/login');
 const loadSearchUserRouter = require('./routes/loadSearchUser');
 const loadFriendsRouter = require('./routes/loadFriends');
@@ -37,6 +38,11 @@ const deleteConversationRouter = require('./routes/deleteConversation');
 const sendMessageRouter = require('./routes/sendMessage');
 const showBotSettingStateRouter = require('./routes/showBotSettingState');
 const editAutoReplyRouter = require('./routes/editAutoReply');
+const addDiaryRouter = require('./routes/addDiary');
+const deleteDiaryRouter = require('./routes/deleteDiary');
+const addCommentRouter = require('./routes/addComment');
+const recallCommentRouter = require('./routes/recallComment');
+const loadDiariesRouter = require('./routes/loadDiaries');
 
 app.use(morgan('dev'));
 /*app.use(jwt({
@@ -73,9 +79,16 @@ app.use('/createMessage',createMessageRouter);
 app.use('/loadConversations',loadConversationsRouter);
 app.use('/deleteConversation',deleteConversationRouter);
 app.use('/loadMessages',loadMessagesRouter);
+app.use('/recallMessage',recallMessageRouter);
 app.use('/sendMessage',sendMessageRouter);
 app.use('/showBotSettingState',showBotSettingStateRouter);
 app.use('/editAutoReply',editAutoReplyRouter);
+app.use('/addDiary',addDiaryRouter);
+app.use('/deleteDiary',deleteDiaryRouter);
+app.use('/addComment',addCommentRouter);
+app.use('/recallComment',recallCommentRouter);
+app.use('/loadDiaries',loadDiariesRouter);
+
 //app.use('/loadFriends',loadFriendRouter);
 
 

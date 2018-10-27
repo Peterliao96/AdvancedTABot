@@ -72,14 +72,27 @@ const SwitchTabs = createMaterialTopTabNavigator({
   swipeEnabled:true,
   initialRouteName:'RequestScreen',
   tabBarOptions:{
+    showLabel:true,
     upperCaseLabel:false,
     style:{
       borderColor:COLOR.blue500,
       borderWidth:0,
+      height:90
     },
     tabStyle:{
       borderColor:COLOR.blue500,
       borderWidth:0
+    },
+    labelStyle:{
+      marginTop:50
+    },
+    indicatorStyle:{
+      borderColor:'white',
+      borderWidth:0.5
+    },
+    iconStyle:{
+      borderColor:'white',
+      borderWidth:0.5
     }
   },
 })
@@ -99,18 +112,6 @@ class RequestScreenNavigator extends Component{
     const { onSearchUser } = this.props
     return(
       <Container>
-      <SearchBar
-        ref={search => this.search = search}
-        clearIcon={{ color: COLOR.blue300 }}
-        showLoading={isSearchUserLoading}
-        showLoadingIcon={isSearchUserLoading}
-        onChangeText={(text) => this._searchUser(text)}
-        platform="ios"
-        cancelButtonTitle="Cancel"
-        containerStyle={{backgroundColor:COLOR.blue500,width:deviceW, marginTop:0,height:80,borderWidth:1,borderColor:COLOR.blue500}}
-        inputContainerStyle={{backgroundColor:COLOR.blue100,marginTop:40}}
-        inputStyle={{backgroundColor:COLOR.blue100,marginTop:40}}
-        placeholder='Search by full name' />
       <SwitchTabs/>
       </Container>
     )

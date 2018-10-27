@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  ScrollView
 } from 'react-native';
+import {connect} from 'react-redux'
+import {getMyProfile} from '../../actions/loadMyProfile';
+import ScrollableHeader from '../../components/scrollableHeader';
 var PropTypes = require('prop-types');
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle,Avatar } from 'react-native-material-ui';
 import CustomButton from '../../components/CustomButton'
 import  Icon  from 'react-native-vector-icons/FontAwesome';
-export default class DiscoverScreen extends Component{
+
+class DiscoverScreen extends Component{
   static propTypes = {
     logout: PropTypes.func
   }
@@ -24,7 +29,8 @@ export default class DiscoverScreen extends Component{
       },
       headerRight:(
         <Icon name='edit'
-        onPress={() => navigation.navigate('PostDiaryScreen')}
+        size={20}
+        onPress={() => navigation.push('PostDiaryScreen',{avatar:navigation.getParam('avatar')})}
         color="#fff"
       />
     ),
@@ -34,20 +40,74 @@ export default class DiscoverScreen extends Component{
   }
 }
 
+isEmpty(obj){
+  for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+          return false;
+  }
+  return true;
+}
+
+
+componentDidMount(){
+  if(!this.isEmpty(this.props.auth.userFBData)){
+    const data = {
+      UserId: this.props.auth.userFBData.user.providerData[0].uid
+    }
+    this.props.getProfile(data)
+    this.props.navigation.setParams({
+      avatar:this.props.auth.FBuser.avatar
+    })
+  } else if (!this.isEmpty(this.props.auth.FBuser)){
+    const data = {
+      UserId: this.props.auth.FBuser.UserId
+    }
+    this.props.getProfile(data)
+    this.props.navigation.setParams({
+      avatar:this.props.auth.FBuser.avatar
+    })
+  } else {
+    AsyncStorage.getItem('UserInfo').then(UserInfo => {
+      if(UserInfo){
+        var UserInfo = JSON.parse(UserInfo);
+        const data = {
+          UserId: UserInfo.user.myId
+        }
+        this.props.getProfile(data)
+        this.props.navigation.setParams({
+          avatar:this.props.auth.FBuser.avatar
+        })
+      }
+    })
+  }
+}
+
   render() {
+
+    const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
+    const { user: {profile}} = this.props
+    const { onLogoutPress,logout ,getProfile,navigation} = this.props
+    //const avatar = navigation.setParams({avatar:!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar})
     return (
-      <View style={styles.container}>
-        <Text> Hello </Text>
-        <CustomButton
-          text={'Logout'}
-          onPress={this.props.logout}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-      </View>
+      <ScrollView>
+        <ScrollableHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar}/>
+
+      </ScrollView>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  auth: state.auth
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getProfile: data => {dispatch(getMyProfile(data))},
+  onLogoutPress: () => {dispatch(onLogout())}
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(DiscoverScreen)
 
 const styles = StyleSheet.create({
   container: {
