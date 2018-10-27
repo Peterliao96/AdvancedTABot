@@ -4,7 +4,7 @@ import{
   POSTING_DIARY_FAILURE
 } from '../reducers/diary';
 import callApi from '../helpers/api';
-import {loadDiaries} from './loadDiaries';
+import {loadDiaries,loadMyDiaries} from './loadDiaries';
 
 function posting(){
   return{
@@ -47,6 +47,7 @@ export function postDiary(data){
         UserId: data.UserId
       }
       dispatch(loadDiaries(loadData))
+      dispatch(loadMyDiaries(loadData))
     })
   }
 }

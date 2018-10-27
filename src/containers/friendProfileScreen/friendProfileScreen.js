@@ -74,8 +74,8 @@ class friendProfileScreen extends Component{
       icon:'settings'
     },{
       id:2,
-      title:'Edit this bot',
-      icon: 'edit'
+      title:"Friend's posting",
+      icon: 'image'
     },{
       id:3,
       title: 'Help',
@@ -104,6 +104,7 @@ class friendProfileScreen extends Component{
               leftIcon={{name:item.icon}}
               title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
+              onPress={() => this.props.navigation.push('friendPostingScreen',{id:item.id})}
             />
             </TouchableOpacity>
           )

@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux'
+import {postDiary} from '../../actions/postDiary';
 import {getMyProfile} from '../../actions/loadMyProfile';
 import  Icon  from 'react-native-vector-icons/FontAwesome';
-import {Avatar} from 'react-native-elements'
+import {Avatar,List, ListItem} from 'react-native-elements'
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle} from 'react-native-material-ui';
 import CustomButton from '../../components/CustomButton'
 import TextInput from '../../components/TextInput'
-import {List, ListItem} from 'react-native-elements';
 import AddSpinnerLoader from '../../components/AddSpinnerLoader';
 import Locale from '../../Locale';
 
@@ -60,9 +60,6 @@ class PostDiaryScreen extends Component{
     return true;
   }
 
-  onPost(){
-
-  }
 
 
   componentDidMount(){
@@ -98,6 +95,45 @@ class PostDiaryScreen extends Component{
     }
   }
 
+  async onPost(){
+    if(!this.isEmpty(this.props.auth.userFBData)){
+      const data = {
+        UserId: this.props.auth.userFBData.user.providerData[0].uid,
+        text:this.state.content,
+        images:this.props.diary.images
+      }
+      this.props.post(data)
+      this.props.navigation.goBack()
+    } else if (!this.isEmpty(this.props.auth.FBuser)){
+      const data = {
+        UserId: this.props.auth.FBuser.UserId,
+        text:this.state.content,
+        images:this.props.diary.images
+      }
+      this.props.post(data)
+      this.props.navigation.goBack()
+    } else {
+      AsyncStorage.getItem('UserInfo').then(UserInfo => {
+        if(UserInfo){
+          var UserInfo = JSON.parse(UserInfo);
+          const data = {
+            UserId: UserInfo.user.myId,
+            text:this.state.content,
+            images:this.props.diary.images
+          }
+          this.props.post(data)
+          this.props.navigation.goBack()
+        }
+      })
+    }
+  }
+
+  async switchPages(id,avatar){
+    if (id === '2'){
+      this.props.navigation.push('SeeStatusScreen',{id:id,avatar:avatar})
+    }
+  }
+
   render() {
     const data = [{
       id:"1",
@@ -110,8 +146,9 @@ class PostDiaryScreen extends Component{
     }]
     const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
     const { user: {profile}} = this.props
+    const {diary:{images}} = this.props
     const { onLogoutPress,logout ,getProfile,navigation} = this.props
-
+    const avatar = navigation.getParam('avatar')
       return (
         <View style={styles.flex}>
         <TextInput ref="content"
@@ -141,7 +178,7 @@ class PostDiaryScreen extends Component{
               leftIcon={{name:item.icon}}
               title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
-              //onPress={this.switchPages.bind(this,item.id,UserId,fullName,avatar,description,index)}
+              onPress={this.switchPages.bind(this,item.id,avatar)}
             />
             </TouchableOpacity>
           )
@@ -149,7 +186,7 @@ class PostDiaryScreen extends Component{
         keyExtractor={(item,index) => item.id}
       />
     </List>
-          <CustomButton style={styles.button} text={i18n.t('submit')} textStyle={styles.buttonText} onPress={this.onSubmitButton}/>
+          <CustomButton style={styles.button} text={i18n.t('submit')} textStyle={styles.buttonText} onPress={this.onPost.bind(this)}/>
 
         <View style={{height: this.state.keyboardSpace}}></View>
       </View>
@@ -164,7 +201,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getProfile: data => {dispatch(getMyProfile(data))},
-  onLogoutPress: () => {dispatch(onLogout())}
+  onLogoutPress: () => {dispatch(onLogout())},
+  post: data => {dispatch(postDiary(data))}
 })
 
 var i18n = Locale.key('CreatePost', {

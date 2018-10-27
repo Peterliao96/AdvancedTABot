@@ -6,6 +6,7 @@ import {
   ScrollView
 } from 'react-native';
 import {connect} from 'react-redux'
+import {loadDiaries} from '../../actions/loadDiaries'
 import {getMyProfile} from '../../actions/loadMyProfile';
 import ScrollableHeader from '../../components/scrollableHeader';
 var PropTypes = require('prop-types');
@@ -55,6 +56,7 @@ componentDidMount(){
       UserId: this.props.auth.userFBData.user.providerData[0].uid
     }
     this.props.getProfile(data)
+    this.props.onLoadDiaries(data)
     this.props.navigation.setParams({
       avatar:this.props.auth.FBuser.avatar
     })
@@ -63,6 +65,7 @@ componentDidMount(){
       UserId: this.props.auth.FBuser.UserId
     }
     this.props.getProfile(data)
+    this.props.onLoadDiaries(data)
     this.props.navigation.setParams({
       avatar:this.props.auth.FBuser.avatar
     })
@@ -74,6 +77,7 @@ componentDidMount(){
           UserId: UserInfo.user.myId
         }
         this.props.getProfile(data)
+        this.props.onLoadDiaries(data)
         this.props.navigation.setParams({
           avatar:this.props.auth.FBuser.avatar
         })
@@ -86,7 +90,8 @@ componentDidMount(){
 
     const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
     const { user: {profile}} = this.props
-    const { onLogoutPress,logout ,getProfile,navigation} = this.props
+    const {diary:{diaryList}} = this.props
+    const { onLogoutPress,logout ,getProfile,navigation,onLoadDiaries} = this.props
     //const avatar = navigation.setParams({avatar:!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar})
     return (
       <ScrollView>
@@ -99,12 +104,14 @@ componentDidMount(){
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  auth: state.auth
+  auth: state.auth,
+  diary:state.diary
 })
 
 const mapDispatchToProps = (dispatch) => ({
   getProfile: data => {dispatch(getMyProfile(data))},
-  onLogoutPress: () => {dispatch(onLogout())}
+  onLogoutPress: () => {dispatch(onLogout())},
+  onLoadDiaries: data => {dispatch(loadDiaries(data))}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(DiscoverScreen)

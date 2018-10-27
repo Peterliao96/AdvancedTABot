@@ -12,13 +12,14 @@ import diary from './reducers/diary';
 import conversations from './reducers/conversations';
 import messages from './reducers/messages';
 import error from './reducers/error';
-
+import status from './reducers/status';
 const reducers = combineReducers({
   auth,
   //friends,
   diary,
   images,
   user,
+  status,
   bot,
   request,
   //applyMiddleware(logger),

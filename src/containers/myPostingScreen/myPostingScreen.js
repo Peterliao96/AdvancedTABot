@@ -5,6 +5,7 @@ import {
   View,
   ScrollView
 } from 'react-native';
+import {loadMyDiaries} from '../../actions/loadDiaries'
 import {getMyProfile} from '../../actions/loadMyProfile';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux'
@@ -42,11 +43,13 @@ class myPostingScreen extends Component{
         UserId: this.props.auth.userFBData.user.providerData[0].uid
       }
       this.props.getProfile(data)
+      this.props.onLoadMyDiaries(data)
     } else if (!this.isEmpty(this.props.auth.FBuser)){
       const data = {
         UserId: this.props.auth.FBuser.UserId
       }
       this.props.getProfile(data)
+      this.props.onLoadMyDiaries(data)
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         if(UserInfo){
@@ -55,6 +58,7 @@ class myPostingScreen extends Component{
             UserId: UserInfo.user.myId
           }
           this.props.getProfile(data)
+          this.props.onLoadMyDiaries(data)
         }
       })
     }
@@ -63,6 +67,7 @@ class myPostingScreen extends Component{
   render() {
     const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
     const { user: {profile}} = this.props
+    const {diary:{myDiaryList}} = this.props
     const { onLogoutPress,logout ,getProfile} = this.props
     const {navigation} = this.props
     const id = navigation.getParam('id')
@@ -80,12 +85,14 @@ class myPostingScreen extends Component{
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  auth: state.auth
+  auth: state.auth,
+  diary:state.diary
 })
 
 const mapDispatchToProps = (dispatch) => ({
   getProfile: data => {dispatch(getMyProfile(data))},
-  onLogoutPress: () => {dispatch(onLogout())}
+  onLogoutPress: () => {dispatch(onLogout())},
+  onLoadMyDiaries: data => {dispatch(loadMyDiaries(data))}
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(myPostingScreen)

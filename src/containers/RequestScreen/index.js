@@ -8,6 +8,7 @@ import Container from '../../components/DrawerContainer';
 import AddFriendScreen from '../addFriendScreen/addFriendScreen';
 import FriendGroupScreen from '../FriendGroupScreen/FriendGroupScreen';
 import FriendProfileScreen from '../friendProfileScreen/friendProfileScreen';
+import FriendPostingScreen from '../friendPostingScreen/friendPostingScreen';
 import CreateBotScreen from '../CreateBotScreen/CreateBotScreen';
 import BotSettingScreen from '../BotSettingScreen/BotSettingScreen';
 import RequestScreen from './RequestScreen';
@@ -59,6 +60,9 @@ const SwitchTabs = createMaterialTopTabNavigator({
       },
       friendProfileScreen:{
         screen: FriendProfileScreen
+      },
+      friendPostingScreen:{
+        screen: FriendPostingScreen
       }
     },{
       headerMode: 'none'

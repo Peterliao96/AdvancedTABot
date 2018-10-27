@@ -31,7 +31,7 @@ router.post('/',(req,res,next) => {
     diary.save()
     res.send({
       diary:diary,
-      diaryId:diaryId
+      diaryId:diary.diaryId
     })
   })
 })
