@@ -4,17 +4,19 @@ const User = require('../models/user')
 const Diary = require('../models/diary');
 router.post('/loadMyDiaries',(req,res,next) => {
   UserId = req.body.UserId;
-  user = User.findOne({UserId:UserId})
-  res.send({
-    diary:user.diary
+  User.findOne({UserId:UserId}).then(user => {
+    res.send({
+      diary:user.diary
+    })
   })
 })
 
 router.post('/loadFriendDiaries',(req,res,next) => {
   UserId = req.body.UserId;
-  user = User.findOne({UserId:UserId})
-  res.send({
-    diary:user.diary
+  User.findOne({UserId:UserId}).then(user => {
+    res.send({
+      diary:user.diary
+    })
   })
 })
 

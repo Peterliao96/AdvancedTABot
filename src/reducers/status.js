@@ -1,9 +1,12 @@
 export const CHANGE_STATUS_SUCCESS = 'CHANGE_STATUS_SUCCESS';
 export const CHANGE_STATUS_FAILURE = 'CHANGE_STATUS_FAILURE';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
+
+
 const initState = {
   seeStatus:1,
-  isLoading:false
+  isLoading:false,
+  isSearching:false
 }
 
 export default(state = initState, action) =>{

@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  FlatList
 } from 'react-native';
 import {connect} from 'react-redux'
 import {loadDiaries} from '../../actions/loadDiaries'
@@ -96,7 +97,6 @@ componentDidMount(){
     return (
       <ScrollView>
         <ScrollableHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar}/>
-
       </ScrollView>
     )
   }

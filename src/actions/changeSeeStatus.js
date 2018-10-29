@@ -29,5 +29,7 @@ function changeSeeStatusSuccess(seeStatus){
 }
 
 export function changeSeeStatus(data){
-  dispatch(changeSeeStatusSuccess(data.seeStatus))
+  return dispatch => {
+    dispatch(changeSeeStatusSuccess(data.seeStatus))
+  }
 }

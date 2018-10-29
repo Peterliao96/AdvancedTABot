@@ -10,6 +10,7 @@ export const SHOW_BOT_AVATAR_SUCCESS = 'SHOW_BOT_AVATAR_SUCCESS';
 export const SHOW_MY_AVATAR = 'SHOW_MY_AVATAR';
 export const SHOW_MY_AVATAR_SUCCESS = 'SHOW_MY_AVATAR_SUCCESS';
 
+
 const initState = {
   isShowingBot:false,
   isShowingMe: false,

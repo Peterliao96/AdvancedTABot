@@ -12,17 +12,20 @@ import {
   Modal,
   Image,
   ScrollView,
-  ImageBackground
+  ImageBackground,
+  FlatList
 } from 'react-native';
+import DiaryList from './diaryList'
 import { SearchBar } from 'react-native-elements'
 import ImageViewer from 'react-native-image-zoom-viewer';
+import {connect} from 'react-redux';
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle,Avatar } from 'react-native-material-ui';
 const HEADER_MAX_HEIGHT = 250;
 const deviceW = Dimensions.get('window').width
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 0 : 73;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-export default class ScrollableHeader extends Component {
+class ScrollableHeader extends Component {
   constructor(props) {
     super(props);
 
@@ -38,14 +41,19 @@ export default class ScrollableHeader extends Component {
   }
 
   _renderScrollViewContent() {
-    const data = Array.from({ length: 30 });
+    const data = this.props.diary.diaryList;
     return (
-      <View style={styles.scrollViewContent}>
-        {data.map((_, i) => (
-          <View key={i} style={styles.row}>
-            <Text>{i}</Text>
-          </View>
-        ))}
+      <View style={{flex:1,backgroundColor:'white'}}>
+      <FlatList
+      extraData={this.props}
+      data={data}
+      renderItem={({item}) => {
+        return (
+          <DiaryList avatar={item.avatar} name={item.name} text={item.text} images={item.images} location={item.location} lastTime={item.sendTime}/>
+        )
+      }}
+      keyExtractor={(item,index) => item.diaryId}
+      />
       </View>
     );
   }
@@ -53,6 +61,7 @@ export default class ScrollableHeader extends Component {
   render() {
     // Because of content inset the scroll value will be negative on iOS so bring
     // it back to 0.
+    const {diary:{diaryList}} = this.props
     const scrollY = Animated.add(
       this.state.scrollY,
       Platform.OS === 'ios' ? HEADER_MAX_HEIGHT : 0,
@@ -122,7 +131,7 @@ export default class ScrollableHeader extends Component {
             y: -HEADER_MAX_HEIGHT,
           }}
         >
-          
+        {this._renderScrollViewContent()}
         </Animated.ScrollView>
         <Animated.View
           pointerEvents="none"
@@ -175,7 +184,11 @@ export default class ScrollableHeader extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  diary:state.diary
+})
 
+export default connect(mapStateToProps,null)(ScrollableHeader)
 const styles = StyleSheet.create({
   fill: {
     flex: 1,

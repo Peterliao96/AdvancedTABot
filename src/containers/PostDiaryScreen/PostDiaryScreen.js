@@ -6,17 +6,27 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Button
+  Button,
+  Modal
 } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+const ApiKey = require('../../config/Google_Api_config');
+import CameraRollPicker from 'react-native-camera-roll-picker';
+import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav';
+import {FaceDetector,MapView,Permissions,ImagePicker,Location} from 'expo';
+import ActionSheet from 'react-native-actionsheet';
 var PropTypes = require('prop-types');
 import {connect} from 'react-redux'
+import {showImage} from '../../actions/showImage'
 import {postDiary} from '../../actions/postDiary';
+import {setModalVisible,setModalUnVisble,setZoomViewModalVisible} from '../../actions/setModalVisible'
 import {getMyProfile} from '../../actions/loadMyProfile';
 import  Icon  from 'react-native-vector-icons/FontAwesome';
 import {Avatar,List, ListItem} from 'react-native-elements'
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle} from 'react-native-material-ui';
 import CustomButton from '../../components/CustomButton'
 import TextInput from '../../components/TextInput'
+import {Toast} from 'native-base'
 import AddSpinnerLoader from '../../components/AddSpinnerLoader';
 import Locale from '../../Locale';
 
@@ -100,18 +110,32 @@ class PostDiaryScreen extends Component{
       const data = {
         UserId: this.props.auth.userFBData.user.providerData[0].uid,
         text:this.state.content,
-        images:this.props.diary.images
+        seeStatus:this.props.diary.seeStatus,
+        images:this.props.diary.images,
+        location:this.props.diary.locations.length === 0 ? null : this.props.diary.locations[this.props.diary.chosenLocation].name
       }
       this.props.post(data)
       this.props.navigation.goBack()
+      Toast.show({
+            text: "Wrong password!",
+            buttonText: "Okay",
+            duration: 3000
+          })
     } else if (!this.isEmpty(this.props.auth.FBuser)){
       const data = {
         UserId: this.props.auth.FBuser.UserId,
         text:this.state.content,
-        images:this.props.diary.images
+        seeStatus:this.props.diary.seeStatus,
+        images:this.props.diary.images,
+        location:this.props.diary.locations.length === 0 ? null : this.props.diary.locations[this.props.diary.chosenLocation].name
       }
       this.props.post(data)
       this.props.navigation.goBack()
+      Toast.show({
+            text: "Wrong password!",
+            buttonText: "Okay",
+            duration: 3000
+          })
     } else {
       AsyncStorage.getItem('UserInfo').then(UserInfo => {
         if(UserInfo){
@@ -119,18 +143,142 @@ class PostDiaryScreen extends Component{
           const data = {
             UserId: UserInfo.user.myId,
             text:this.state.content,
-            images:this.props.diary.images
+            seeStatus:this.props.diary.seeStatus,
+            images:this.props.diary.images,
+            location:this.props.diary.locations.length === 0 ? null : this.props.diary.locations[this.props.diary.chosenLocation].name
           }
           this.props.post(data)
           this.props.navigation.goBack()
+          Toast.show({
+                text: "Wrong password!",
+                buttonText: "Okay",
+                duration: 3000
+              })
         }
       })
     }
   }
 
+  showActionSheet = () => {
+  this.ActionSheet.show()
+  }
+
+  detectFaces = async (imageUri) => {
+    const options = { mode: FaceDetector.Constants.Mode.fast };
+    return await FaceDetector.detectFacesAsync(imageUri, options);
+  };
+
+  onChooseImagePress = async (index) => {
+    if(index === 0){
+      const permissions = Permissions.CAMERA_ROLL;
+      const { status } = await Permissions.askAsync(permissions);
+
+      if(status === 'granted'){
+        let result = await ImagePicker.launchCameraAsync({
+          mediaTypes:'Images'
+        })
+        .catch(err => {
+          console.log(permissions,{err})
+        })
+        if(!result.cancelled){
+          this.detectFaces(result.uri)
+          this.props.OnShowImage(result.uri)
+        }
+      }
+    } else if(index === 1){
+      const permissions = Permissions.CAMERA_ROLL;
+      const { status } = await Permissions.askAsync(permissions);
+
+      if(status === 'granted'){
+        this.props.onSetModalVisible(true)
+        /*let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes:'Images'
+        })
+        .catch(err => {
+          console.log(permissions,{err})
+        })
+        if(!result.cancelled){
+          this.props.OnShowImage(result.uri)
+        }*/
+
+      }
+
+    }
+  }
+
+  setImages(images) {
+    this._images = images;
+  }
+
+  getImages() {
+    return this._images;
+  }
+
+  selectImages(images) {
+    this.setImages(images);
+  }
+
+  renderNavBar() {
+    return (
+      <NavBar style={{
+        statusBar: {
+          backgroundColor: '#FFF',
+        },
+        navBar: {
+          backgroundColor: '#FFF',
+        },
+      }}>
+        <NavButton onPress={() => {
+          this.props.onSetModalUnVisible(false);
+        }}>
+          <NavButtonText style={{
+            color: '#000',
+          }}>
+            {'Cancel'}
+          </NavButtonText>
+        </NavButton>
+        <NavTitle style={{
+          color: '#000',
+        }}>
+          {'Camera Roll'}
+        </NavTitle>
+        <NavButton onPress={() => {
+          this.props.onSetModalUnVisible(false);
+
+          const images = this.getImages().map((image) => {
+            return {
+              image: image.uri,
+            };
+          });
+          this.props.OnShowImage(images);
+          this.props.setZoomViewModal(false)
+          this.setImages([]);
+        }}>
+          <NavButtonText style={{
+            color: '#000',
+          }}>
+            {'Choose'}
+          </NavButtonText>
+        </NavButton>
+      </NavBar>
+    );
+  }
+
+
   async switchPages(id,avatar){
     if (id === '2'){
       this.props.navigation.push('SeeStatusScreen',{id:id,avatar:avatar})
+    } else if (id === '1'){
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== 'granted') {
+        this.setState({
+          locationResult: 'Permission to access location was denied',
+          location,
+        });
+      }
+      Location.setApiKey(ApiKey)
+      let location = await Location.getCurrentPositionAsync({});
+      this.props.navigation.push('NearbyLocationScreen',{id:id,location:location,avatar:avatar})
     }
   }
 
@@ -146,8 +294,14 @@ class PostDiaryScreen extends Component{
     }]
     const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
     const { user: {profile}} = this.props
-    const {diary:{images}} = this.props
-    const { onLogoutPress,logout ,getProfile,navigation} = this.props
+    const {diary:{images,modalVisible,zoomViewModalVisible}} = this.props
+    const imagesUrls = this.props.diary.images.map(item => {
+      insertObject = {}
+      insertObject.url = item.image
+      insertObject.freeHeight = true
+      return insertObject
+    })
+    const { onLogoutPress,logout ,getProfile,navigation,OnShowImage,setZoomViewModal} = this.props
     const avatar = navigation.getParam('avatar')
       return (
         <View style={styles.flex}>
@@ -161,14 +315,179 @@ class PostDiaryScreen extends Component{
           returnKeyType='done'
           onChange={(event) => this.state.content = event.nativeEvent.text }
         />
-        <View style={{backgroundColor:'white',height:350}}>
-          <TouchableOpacity style={{width:100,height:100}}>
-            <Image style={{width:100,height:100,margin:20,borderWidth:1,borderColor:'#c4cbce'}} source={require('../../images/plus2.png')}/>
-          </TouchableOpacity>
+        <View style={{flexDirection: 'column'}}>
+          <View style={{backgroundColor:'white',height:120,flexDirection:'row'}}>
+            {images.length === 0? null:
+              images.map((data) =>{
+                if(images.indexOf(data) <= 2){
+                  return(
+                  <View>
+                  <TouchableOpacity onPress={() => this.props.setZoomViewModal(true)}>
+                    <Image style={{width:100,height:100,margin:20}} source={{uri:data.image}}/>
+                  </TouchableOpacity>
+                  <Modal
+                visible={zoomViewModalVisible}
+                transparent={true}
+                onRequestClose={() => this.props.setZoomViewModal(false)}
+              >
+                <ImageViewer
+                  imageUrls={imagesUrls}
+                  onClick={(onCancel) => {onCancel()}}
+                  index={images.indexOf(data)}
+                  onSwipeDown={() => {
+                    console.log('onSwipeDown');
+                  }}
+                  enableSwipeDown={true}
+                />
+              </Modal>
+              </View>
+                  )
+                }
+              })}
+              <TouchableOpacity style={{width:100,height:100}} onPress={this.showActionSheet}>
+                <Image style={{width:100,height:100,margin:20,borderWidth:1,borderColor:'#c4cbce'}} source={require('../../images/plus2.png')}/>
+                <ActionSheet
+                  ref={o => this.ActionSheet = o}
+                  title={'Which one do you want to choose ?'}
+                  options={['Take photos', 'Choose images from libraries','Cancel']}
+                  cancelButtonIndex={2}
+                  destructiveButtonIndex={2}
+                  onPress={(index) => { this.onChooseImagePress(index) }}
+                />
+                <Modal
+                  animationType={'slide'}
+                  transparent={false}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    this.prop.onSetModalUnVisible(false);
+                  }}
+                >
+                  {this.renderNavBar()}
+                  <CameraRollPicker
+                    maximum={10}
+                    imagesPerRow={4}
+                    callback={this.selectImages.bind(this)}
+                    selected={[]}
+                  />
+                </Modal>
+              </TouchableOpacity>
+          </View>
+          <View style={{backgroundColor:'white',height:120,flexDirection:'row'}}>
+            {images.length >= 3?
+              <View style={{flexDirection:'row'}}>
+              {images.length === 3? null: images.map((data) =>{
+                if(images.indexOf(data) >= 3 && images.indexOf(data) <= 5){
+                  return(
+                    <View>
+                    <TouchableOpacity onPress={() => this.props.setZoomViewModal(true)}>
+                    <Image style={{width:100,height:100,margin:20}} source={{uri:data.image}}/>
+                    </TouchableOpacity>
+                    <Modal
+                  visible={zoomViewModalVisible}
+                  transparent={true}
+                  onRequestClose={() => this.props.setZoomViewModal(false)}
+                >
+                  <ImageViewer
+                    imageUrls={imagesUrls}
+                    onClick={(onCancel) => {onCancel()}}
+                    index={images.indexOf(data)}
+                    onSwipeDown={() => {
+                      console.log('onSwipeDown');
+                    }}
+                    enableSwipeDown={true}
+                  />
+                </Modal>
+                </View>
+                  )
+                }
+              })}
+              <TouchableOpacity style={{width:100,height:100}} onPress={this.showActionSheet}>
+              <Image style={{width:100,height:100,margin:20,borderWidth:1,borderColor:'#c4cbce'}} source={require('../../images/plus2.png')}/>
+              <ActionSheet
+                ref={o => this.ActionSheet = o}
+                title={'Which one do you want to choose ?'}
+                options={['Take photos', 'Choose images from libraries','Cancel']}
+                cancelButtonIndex={2}
+                destructiveButtonIndex={2}
+                onPress={(index) => { this.onChooseImagePress(index) }}
+              />
+              <Modal
+                animationType={'slide'}
+                transparent={false}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  this.props.onSetModalUnVisible(false);
+                }}
+              >
+                {this.renderNavBar()}
+                <CameraRollPicker
+                  maximum={10}
+                  imagesPerRow={4}
+                  callback={this.selectImages.bind(this)}
+                  selected={[]}
+                />
+              </Modal>
+            </TouchableOpacity></View>:null}
+          </View>
+          <View style={{backgroundColor:'white',height:120,flexDirection:'row'}}>
+            {images.length >= 6?
+              <View style={{flexDirection:'row'}}>
+              {images.length === 6? null: images.map((data) =>{
+                if(images.indexOf(data) >= 6 && images.indexOf(data) <= 8){
+                  return(
+                    <View>
+                    <TouchableOpacity onPress={() => this.props.setZoomViewModal(true)}>
+                    <Image style={{width:100,height:100,margin:20}} source={{uri:data.image}}/>
+                    </TouchableOpacity>
+                    <Modal
+                  visible={zoomViewModalVisible}
+                  transparent={true}
+                  onRequestClose={() => this.props.setZoomViewModal(false)}
+                >
+                  <ImageViewer
+                    imageUrls={imagesUrls}
+                    onClick={(onCancel) => {onCancel()}}
+                    index={images.indexOf(data)}
+                    onSwipeDown={() => {
+                      console.log('onSwipeDown');
+                    }}
+                    enableSwipeDown={true}
+                  />
+                </Modal>
+                </View>
+                  )
+                }
+              })}
+              <TouchableOpacity style={{width:100,height:100}} onPress={this.showActionSheet}>
+              <Image style={{width:100,height:100,margin:20,borderWidth:1,borderColor:'#c4cbce'}} source={require('../../images/plus2.png')}/>
+              <ActionSheet
+                ref={o => this.ActionSheet = o}
+                title={'Which one do you want to choose ?'}
+                options={['Take photos', 'Choose images from libraries','Cancel']}
+                cancelButtonIndex={2}
+                destructiveButtonIndex={2}
+                onPress={(index) => { this.onChooseImagePress(index) }}
+              />
+              <Modal
+                animationType={'slide'}
+                transparent={false}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  this.props.onSetModalUnVisible(false);
+                }}
+              >
+                {this.renderNavBar()}
+                <CameraRollPicker
+                  maximum={10}
+                  imagesPerRow={4}
+                  callback={this.selectImages.bind(this)}
+                  selected={[]}
+                />
+              </Modal>
+            </TouchableOpacity></View>:null}
+          </View>
         </View>
-        <List
-      containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}
-    >
+        <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
       <FlatList
         data={data}
         renderItem={({ item }) => {
@@ -196,13 +515,18 @@ class PostDiaryScreen extends Component{
 const mapStateToProps = (state) => ({
   user: state.user,
   auth: state.auth,
-  diary:state.diary
+  diary:state.diary,
+  status:state.status
 })
 
 const mapDispatchToProps = (dispatch) => ({
   getProfile: data => {dispatch(getMyProfile(data))},
   onLogoutPress: () => {dispatch(onLogout())},
-  post: data => {dispatch(postDiary(data))}
+  post: data => {dispatch(postDiary(data))},
+  OnShowImage:uri => {dispatch(showImage(uri))},
+  onSetModalVisible:data => {dispatch(setModalVisible(data))},
+  onSetModalUnVisible: data => {dispatch(setModalUnVisble(data))},
+  setZoomViewModal: data => {dispatch(setZoomViewModalVisible(data))}
 })
 
 var i18n = Locale.key('CreatePost', {
@@ -256,5 +580,18 @@ const styles = StyleSheet.create({
   footer: {
     padding: 10,
     flexDirection: 'row'
-  }
+  },
+  wrapper: {
+    borderRadius: 13,
+    borderColor: '#b2b2b2',
+    borderWidth: 2,
+    flex: 1,
+  },
+  iconText: {
+    color: '#b2b2b2',
+    fontWeight: 'bold',
+    fontSize: 16,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
 });

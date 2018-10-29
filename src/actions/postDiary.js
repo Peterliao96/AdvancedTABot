@@ -21,18 +21,17 @@ function postingDiaryFailure(err){
   }
 }
 
-function postingDiarySuccess({diary}){
+function postingDiarySuccess(diaryItem){
   return dispatch => {
     dispatch({
       type:POSTING_DIARY_SUCCESS,
-      diary
+      diaryItem
     })
   }
 }
 
 export function postDiary(data){
   return dispatch => {
-    dispatch(posting())
     callApi('/addDiary',{
       method: 'POST',
       headers: {
