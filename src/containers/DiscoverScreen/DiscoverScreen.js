@@ -4,7 +4,8 @@ import {
   Text,
   View,
   ScrollView,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux'
 import {loadDiaries} from '../../actions/loadDiaries'
@@ -89,9 +90,9 @@ componentDidMount(){
 
   render() {
 
-    const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
+    const {auth: {userFBData,FBuser,isAppReady}} = this.props
     const { user: {profile}} = this.props
-    const {diary:{diaryList}} = this.props
+    const {diary:{diaryList,isLoading}} = this.props
     const { onLogoutPress,logout ,getProfile,navigation,onLoadDiaries} = this.props
     //const avatar = navigation.setParams({avatar:!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar})
     return (
@@ -140,5 +141,16 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold'
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor:'#F5FCFF88',
+    opacity:0.5,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

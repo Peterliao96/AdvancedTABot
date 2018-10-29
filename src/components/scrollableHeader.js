@@ -13,7 +13,8 @@ import {
   Image,
   ScrollView,
   ImageBackground,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import DiaryList from './diaryList'
 import { SearchBar } from 'react-native-elements'
@@ -44,6 +45,11 @@ class ScrollableHeader extends Component {
     const data = this.props.diary.diaryList;
     return (
       <View style={{flex:1,backgroundColor:'white'}}>
+      {this.props.diary.isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator size='large' animating={this.props.diary.isLoading} />
+        </View>
+      }
       <FlatList
       extraData={this.props}
       data={data}
@@ -61,7 +67,7 @@ class ScrollableHeader extends Component {
   render() {
     // Because of content inset the scroll value will be negative on iOS so bring
     // it back to 0.
-    const {diary:{diaryList}} = this.props
+    const {diary:{diaryList,isLoading}} = this.props
     const scrollY = Animated.add(
       this.state.scrollY,
       Platform.OS === 'ios' ? HEADER_MAX_HEIGHT : 0,
@@ -282,4 +288,15 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     height:200
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor:'#F5FCFF88',
+    opacity:0.5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

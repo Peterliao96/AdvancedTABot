@@ -5,7 +5,8 @@ import {
   View,
   AsyncStorage,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import { COLOR, ThemeProvider, Toolbar, Badge, IconToggle,Avatar } from 'react-native-material-ui';
@@ -129,11 +130,16 @@ class SettingsScreen extends Component{
       icon: 'help'
     }]
     const {auth: {userFBData,FBuser,isLoading,isAppReady}} = this.props
-    const { user: {profile}} = this.props
+    const { user: {profile,isGetting}} = this.props
     const { onLogoutPress,logout ,getProfile} = this.props
     return (
       <View style={{flex:1}}>
         <PersonHeader name={!this.isEmpty(userFBData) ? userFBData.user.displayName : profile.fullName} description={!this.isEmpty(userFBData) ? userFBData.user.email : profile.email} avatar={!this.isEmpty(userFBData) ? FBuser.avatar : profile.avatar}/>
+        {isGetting &&
+          <View style={styles.loading}>
+            <ActivityIndicator size='large' animating={isGetting} />
+          </View>
+        }
         <List
       containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}
     >
@@ -202,5 +208,16 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold'
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor:'#F5FCFF88',
+    opacity:0.5,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
