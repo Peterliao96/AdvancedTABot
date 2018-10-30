@@ -29,8 +29,8 @@ export default(state = initState, action) => {
         return {
           ...state,
           [action.id]: [
-            ...state[action.id],
-            action.message
+            action.message,
+            ...state[action.id]
           ]
         };
       }
